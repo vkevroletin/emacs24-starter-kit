@@ -450,3 +450,14 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 
 [2] The emacs starter kit uses [[http://orgmode.org/][Org Mode]] to load embedded elisp code
     directly from literate Org-mode documents.
+
+* User customization
+** Appearance
+
+An Emacs port of the Atom Dark theme from Atom.io.
+
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'atom-dark-theme)
+  (enable-theme 'atom-dark)
+#+end_src
+
