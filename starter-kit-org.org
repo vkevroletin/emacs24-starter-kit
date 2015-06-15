@@ -98,3 +98,55 @@ directory) file for information on the functions, and see
 
 Code blocks can be loaded into the library of babel from any Org-mode
 file using the `org-babel-lob-ingest' function.
+
+* User Org
+
+Org acutally uses this variable only under rare circumstances, like
+when filing remember notes in an interactive way and prompting you for
+an Org file to put the note into.
+#+begin_src emacs-lisp
+  (setq org-directory "~/org")
+#+end_src
+
+Agenda should be build from files listed below:
+#+begin_src emacs-lisp
+  (setq org-agenda-files (list "~/org/gtd.org"
+                               "~/org/habits.org"
+                               "~/org/education.org" 
+                               "~/org/work.org"
+                               "~/org/diary.org"))
+#+end_src
+
+When archiving an entry, it will go into "~/org/archive.org"
+#+begin_src emacs-lisp
+  (setq org-archive-location "~/org/archive.org")
+#+end_src
+
+Enable habit tracking in Org-mode
+#+begin_src emacs-lisp
+  (add-to-list 'org-modules 'org-habit)
+#+end_src
+
+Clocking info will be wrapped into a drawer
+#+begin_src emacs-lisp
+  (setq org-clock-into-drawer t)
+#+end_src
+
+List of TODO entry keyword sequences and their interpretation
+#+begin_src emacs-lisp
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEW(n)"  "|" "DONE(d@/!)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEW" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold))))
+
+#+end_src
+
+
