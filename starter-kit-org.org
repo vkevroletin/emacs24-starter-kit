@@ -108,13 +108,21 @@ an Org file to put the note into.
   (setq org-directory "~/org")
 #+end_src
 
-Agenda should be build from files listed below:
+Agenda should be build from files listed below. Create missed files.
 #+begin_src emacs-lisp
-  (setq org-agenda-files (list "~/org/gtd.org"
-                               "~/org/habits.org"
-                               "~/org/education.org" 
-                               "~/org/work.org"
-                               "~/org/diary.org"))
+  (defun touch-file (filename) 
+    (with-temp-buffer (write-file filename)))
+
+  (defun ensure-file-exists (filename)
+    (unless (file-exists-p filename) (touch-file filename)))
+
+  (let ((personal-org-files (list "~/org/gtd.org"
+                                  "~/org/habits.org"
+                                  "~/org/education.org" 
+                                  "~/org/work.org"
+                                  "~/org/diary.org")))
+    (dolist (it personal-org-files) (ensure-file-exists it))
+    (setq org-agenda-files personal-org-files))
 #+end_src
 
 When archiving an entry, it will go into "~/org/archive.org"
