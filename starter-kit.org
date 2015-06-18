@@ -455,7 +455,7 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 ** Appearance
 
 An Emacs port of the Atom Dark theme from Atom.io.
-
+* TODO this approach to install new theme doesn't work
 #+begin_src emacs-lisp
   (starter-kit-install-if-needed 'atom-dark-theme)
   (enable-theme 'atom-dark)
