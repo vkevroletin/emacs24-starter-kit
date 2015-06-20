@@ -125,9 +125,10 @@ Agenda should be build from files listed below. Create missed files.
     (setq org-agenda-files personal-org-files))
 #+end_src
 
-When archiving an entry, it will go into "~/org/archive.org"
+Archive in file ~/org/archive.org (absolute path), under headlines
+"From FILENAME" where file name is the current file name.
 #+begin_src emacs-lisp
-  (setq org-archive-location "~/org/archive.org")
+  (setq org-archive-location "~/org/archive.org::* From %s")
 #+end_src
 
 Enable habit tracking in Org-mode
@@ -145,14 +146,14 @@ List of TODO entry keyword sequences and their interpretation
 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEW(n)"  "|" "DONE(d@/!)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
+              (sequence "WAITING(w@/!)" "MAYBE(h@/!)" "|" "CANCELLED(c@/!)"))))
 
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "red" :weight bold)
               ("NEW" :foreground "blue" :weight bold)
               ("DONE" :foreground "forest green" :weight bold)
               ("WAITING" :foreground "orange" :weight bold)
-              ("HOLD" :foreground "magenta" :weight bold)
+              ("MAYBE" :foreground "magenta" :weight bold)
               ("CANCELLED" :foreground "forest green" :weight bold))))
 
 #+end_src
