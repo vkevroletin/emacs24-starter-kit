@@ -101,6 +101,8 @@ file using the `org-babel-lob-ingest' function.
 
 * User Org
 
+** Own workflow
+
 Org acutally uses this variable only under rare circumstances, like
 when filing remember notes in an interactive way and prompting you for
 an Org file to put the note into.
@@ -159,4 +161,26 @@ List of TODO entry keyword sequences and their interpretation
 
 #+end_src
 
+** Flyspell customization
+
+Indicate grammar mistakes using red wave underline (like in graphical
+text editors).
+
+Org mode loads custom configuration after all starter kit files. So
+this is default values which you can override using custom interface.
+#+begin_src emacs-lisp
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(flyspell-duplicate ((t (:underline (:color "dark orange" :style wave :inherit unspecified)))))
+ '(flyspell-incorrect ((t (:underline (:color "red" :style wave :inherit unspecified))))))
+#+end_src
+
+Enable flyspell for org mode
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 'turn-on-flyspell)
+#+end_src
 
