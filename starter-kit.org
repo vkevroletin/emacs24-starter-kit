@@ -394,6 +394,17 @@ everyone using the starter kit.
   (starter-kit-load "starter-kit-registers.org")
   #+end_src
 
+** Starter kit parts enabled by user
+   :PROPERTIES:
+   :CUSTOM_ID: starter-kit-enabled-parts
+   :END:
+   
+#+begin_src emacs-lisp
+  (starter-kit-load "misc-recommended")
+  (starter-kit-load "org")
+  (starter-kit-load "yasnippet")
+#+end_src
+
 ** Load User/System Specific Files
 *** System/User specific customizations
 You can keep system- or user-specific customizations here in either
@@ -443,15 +454,10 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
   (load custom-file 'noerror)
 #+end_src
 
-* Footnotes
-
-[1] If you already have a directory at =~/.emacs.d= move it out of the
-    way and put this there instead.
-
-[2] The emacs starter kit uses [[http://orgmode.org/][Org Mode]] to load embedded elisp code
-    directly from literate Org-mode documents.
-
 * User customization
+
+See [[#starter-kit-enabled-parts][starter kit parts enabled by user]]
+
 ** Appearance
 
 An Emacs port of the Atom Dark theme from Atom.io. Currently you need
@@ -467,4 +473,12 @@ to install and enable it by hands:
 #+begin_src emacs-lisp
   (put 'narrow-to-region 'disabled nil)
 #+end_src
+
+* Footnotes
+
+[1] If you already have a directory at =~/.emacs.d= move it out of the
+    way and put this there instead.
+
+[2] The emacs starter kit uses [[http://orgmode.org/][Org Mode]] to load embedded elisp code
+    directly from literate Org-mode documents.
 
