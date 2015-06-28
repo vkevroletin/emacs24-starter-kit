@@ -168,12 +168,11 @@ text editors).
 
 Org mode loads custom configuration after all starter kit files. So
 this is default values which you can override using custom interface.
+
+Advice: to investigate font face under cursor use what-cursor-position
+with a prefix argument /(keyboard shortcut is C-u C-x =)/.
 #+begin_src emacs-lisp
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(flyspell-duplicate ((t (:underline (:color "dark orange" :style wave :inherit unspecified)))))
  '(flyspell-incorrect ((t (:underline (:color "red" :style wave :inherit unspecified))))))
 #+end_src
