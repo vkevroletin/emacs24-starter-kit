@@ -454,10 +454,17 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 * User customization
 ** Appearance
 
-An Emacs port of the Atom Dark theme from Atom.io.
-* TODO this approach to install new theme doesn't work
+An Emacs port of the Atom Dark theme from Atom.io. Currently you need
+to install and enable it by hands:
++ M-x package-install atom-dark
++ M-x customize-themes
 #+begin_src emacs-lisp
-  (starter-kit-install-if-needed 'atom-dark-theme)
   (enable-theme 'atom-dark)
+#+end_src
+
+** Enable masked commands
+
+#+begin_src emacs-lisp
+  (put 'narrow-to-region 'disabled nil)
 #+end_src
 
