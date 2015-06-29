@@ -394,16 +394,10 @@ everyone using the starter kit.
   (starter-kit-load "starter-kit-registers.org")
   #+end_src
 
-** Starter kit parts enabled by user
-   :PROPERTIES:
-   :CUSTOM_ID: starter-kit-enabled-parts
-   :END:
-   
-#+begin_src emacs-lisp
-  (starter-kit-load "misc-recommended")
-  (starter-kit-load "org")
-  (starter-kit-load "yasnippet")
-#+end_src
+- Load user configuration
+  #+begin_src emacs-lisp
+  (starter-kit-load "starter-kit-personalization.org")
+  #+end_src
 
 ** Load User/System Specific Files
 *** System/User specific customizations
@@ -454,26 +448,20 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
   (load custom-file 'noerror)
 #+end_src
 
-* User customization
+* Theme
 
-See [[#starter-kit-enabled-parts][starter kit parts enabled by user]]
+Theme should be loaded after custom (because custom stores hash sum to
+enable selected theme).
 
-** Appearance
-
-An Emacs port of the Atom Dark theme from Atom.io. Currently you need
-to install and enable it by hands:
+An Emacs port of the Atom Dark theme from Atom.io. Currently there is
+no automated theme installation in Starter Kit so you need to install
+and enable it by hands:
 + M-x package-install atom-dark
 + M-x customize-themes
 #+begin_src emacs-lisp
   (enable-theme 'atom-dark)
 #+end_src
-
-** Enable masked commands
-
-#+begin_src emacs-lisp
-  (put 'narrow-to-region 'disabled nil)
-#+end_src
-
+    
 * Footnotes
 
 [1] If you already have a directory at =~/.emacs.d= move it out of the

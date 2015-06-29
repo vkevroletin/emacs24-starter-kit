@@ -1,0 +1,36 @@
+#+TITLE: Personalization
+#+OPTIONS: toc:2 num:nil ^:nil
+
+* Why
+
+I share my Emacs configuration between work and home machines. Using
+machine or user specific configuration is not convenient because
+on working machine I use corporative user account with strange name
+which I don't want to use at home.
+
+* Enable Starter Kit parts
+   :PROPERTIES:
+   :CUSTOM_ID: starter-kit-enabled-parts
+   :END:
+
+- Disable menu bar
+  #+begin_src emacs-lisp
+    (starter-kit-load "misc-recommended")
+  #+end_src
+
+- Org mode configured to own GTD-like workflow
+  #+begin_src emacs-lisp
+    (starter-kit-load "org")
+  #+end_src
+
+- Yasnippet: type word and press TAB to expand
+  #+begin_src emacs-lisp
+    (starter-kit-load "yasnippet")
+  #+end_src
+
+* Enable masked commands
+
+#+begin_src emacs-lisp
+  (put 'narrow-to-region 'disabled nil)
+#+end_src
+
