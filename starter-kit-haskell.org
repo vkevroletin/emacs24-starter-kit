@@ -3,6 +3,13 @@
 
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
+* Attention
+
+You need to install external software:
+#+begin_src sh
+  cabal install happy alex stylish-haskell ghc-mod
+#+end_src
+
 * Starter Kit Haskell
   :PROPERTIES:
   :results:  silent
@@ -144,11 +151,16 @@ paredit-mode for Emacs.
 #+end_src
 
 *** Configure
+Hook configures faces after major mode loading. Otherwise I get
+"unknown face" error.
 #+begin_src emacs-lisp
-  (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-  ;; The following are apparently pretty good for solarized-light.
-  ;;(set-face-background 'shm-current-face "#eee8d5")
-  ;;(set-face-background 'shm-quarantine-face "lemonchiffon")
+  (defun enable-configure-shm()
+    (structured-haskell-mode)
+
+    (set-face-background 'shm-current-face "#16181a")
+    (set-face-background 'shm-quarantine-face "#231f21"))
+
+  (add-hook 'haskell-mode-hook 'enable-configure-shm)
 #+end_src
 
 
