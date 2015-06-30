@@ -28,6 +28,20 @@ which I don't want to use at home.
     (starter-kit-load "yasnippet")
   #+end_src
 
+- Haskell. This requires installation of external software.
+  #+begin_src emacs-lisp
+    (starter-kit-load "haskell")
+  #+end_src
+
+* Environment fixes
+
++ Emacs can't execute some programs which are available from command
+  line
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'exec-path-from-shell)
+    (exec-path-from-shell-initialize)
+  #+end_src
+
 * Enable masked commands
 
 #+begin_src emacs-lisp
