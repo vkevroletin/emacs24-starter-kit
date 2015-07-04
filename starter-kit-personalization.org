@@ -33,6 +33,11 @@ which I don't want to use at home.
     (starter-kit-load "haskell")
   #+end_src
 
+- Helm. Interactive fuzzy matching for every day emacs commands.
+  #+begin_src emacs-lisp
+    (starter-kit-load "helm")
+  #+end_src
+
 * Environment fixes
 
 + Emacs can't execute some programs which are available from command

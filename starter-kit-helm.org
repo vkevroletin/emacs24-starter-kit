@@ -1,0 +1,154 @@
+  
+* [[https://emacs-helm.github.io/helm/][Helm]]
+
++ Install and enable core package
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'helm)
+    (require 'helm-config)
+    (helm-mode 1)
+  #+end_src
+
+** Key bindings
+
++ Remap helm-command-prefix to "C-c h". Easy to remember h for Helm.
+
+  The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+  Changed to "C-c h". Note: We must set "C-c h" globally, because we
+  cannot change `helm-command-prefix-key' once `helm-config' is
+  loaded [1].
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+    (global-unset-key (kbd "C-x c"))
+  #+end_src
+
++ Set shortcuts for helm windows
+  - rebind tab to run persistent action
+  - make TAB works in terminal
+  - list actions using C-z
+  #+begin_src emacs-lisp
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) 
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+    (define-key helm-map (kbd "C-z")  'helm-select-action)
+  #+end_src
+
+*** Replace standard Emacs bindings
+
++ Replace standard M-x. helm-M-x shows recent commands history
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "M-x") 'helm-M-x)
+  #+end_src
+
++ C-x C-f to find file
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  #+end_src
+
++ M-y to show kill ring
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+  #+end_src
+
++ C-x b to select buffer
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-x b") 'helm-mini)
+  #+end_src
+
++ C-x h g to grep (with prefix argument grep recursively).
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-c h g") 'helm-do-grep)
+  #+end_src
+
++ C-x h o to list all string occurrences in current buffer
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-c h o") 'helm-occur)
+  #+end_src
+
++ C-h a to find anything
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-h a") 'helm-apropos)
+  #+end_src
+
++ Explore marks rings (navigation history). C-h SPC
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+  #+end_src
+
++ Manipulate registers. C-c h x
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-c h x") 'helm-register)
+  #+end_src
+
+** Configuration
+
++ Enable fuzzy matching globally in all functions helmized by
+  helm-mode
+  
+  You can selectively enable fuzzy matching. See [2] for details.
+  #+begin_src emacs-lisp
+    (setq helm-mode-fuzzy-match                 t
+          helm-completion-in-region-fuzzy-match t)
+  #+end_src
+  
++ Open helm buffer inside current window, not occupy whole other window
+  #+begin_src emacs-lisp
+    (setq helm-split-window-in-side-p t)
+  #+end_src
+
++ Tune helm buffer behavior
+  #+begin_src emacs-lisp
+    (setq helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+          helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+          helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+          helm-ff-file-name-history-use-recentf t)
+  #+end_src
+
+*** Optimization
+
++ Optimize helm-google
+  #+begin_src emacs-lisp
+    (when (executable-find "curl")
+      (setq helm-google-suggest-use-curl-p t))
+  #+end_src
+
++ Optimize grep
+  #+begin_src emacs-lisp
+    (when (executable-find "ack-grep")
+      (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
+            helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
+  #+end_src
+
+* Projectile
+
+TODO: describe
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'projectile)
+  (starter-kit-install-if-needed 'helm-projectile)
+
+  (projectile-global-mode)
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on)
+#+end_src
+
+* Additional plugins
+
+** Helm describe bindings
+  
+  TODO: describe and add binding
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'helm-descbinds)
+    (require 'helm-descbinds)
+    (helm-descbinds-mode)
+  #+end_src
+   
+* Sources
+
+[1] http://tuhdo.github.io/helm-intro.html
+[2] [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Config of Helm maintainer]]
+[3] [[http://tuhdo.github.io/helm-projectile.html][helm-projetile homepage]]
+
+* External dependencies                                 :manual_installation:
+
+This configuration uses optional programs:
++ ack-grep
++ surfraw
+
