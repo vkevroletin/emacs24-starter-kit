@@ -8,6 +8,16 @@
     (helm-mode 1)
   #+end_src
 
+** Face colors
+
+Customize faces with white background since they are ugly in dark
+theme.
+#+begin_src emacs-lisp
+  (custom-set-faces
+    '(helm-buffer-directory ((t (:foreground "#DAD085"))))
+    '(helm-ff-directory     ((t (:foreground "goldenrod")))))
+#+end_src
+
 ** Key bindings
 
 + Remap helm-command-prefix to "C-c h". Easy to remember h for Helm.
