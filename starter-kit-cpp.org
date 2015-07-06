@@ -1,10 +1,49 @@
 
 * General
 
-#+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-#+end_src
+- Open .h files in c++ mode. In theory c++ mode should handle c
+  headers properly.
+  #+begin_src emacs-lisp
+    (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  #+end_src
+
+There are several important features required for development of big
+programming project:
+
++ source code navigation
+  - Gtags - tags-based navigation. Simple, not accurate but robust.
+
+  - Semantic/Senator - navigation based on parsed implemented in Emacs
+    lisp. It understands context. But not 100% accurate and quite
+    fragile.
+
+  - gcc/clang based parsers - should be more accurate. Didn't
+    investigate them.
+
++ code completion
+  - auto-complete, hippie-expand - not accurate completion which
+    cache strings from current buffer. Extremely simple and not very
+    useful for c++ development.
+
+  - Semantic - let's investigate.
+
+  - gcc/clang -  should be very accurate. Didn't investigate them.
+
++ string search through project files
+  - projectile and helm helps to quickly grep through project files.
+
+  - Gtags allows to quickly search tags.
+
+  - Semantic allows to find tags and references to particular tag.
+
++ quick files switch
+  - projectile and helm provide interactive interface to find files by
+    names.
+
++ refactoring
   
+  Didn't investigate.
+
 * Gtags
 
 #+begin_src emacs-lisp
@@ -14,9 +53,9 @@
    helm-gtags-use-input-at-cursor t
    helm-gtags-pulse-at-cursor t
    helm-gtags-prefix-key "\C-cg"
-   helm-gtags-suggested-key-mapping t
-   )
-
+   helm-gtags-suggested-key-mapping t)
+ 
+  (starter-kit-install-if-needed 'helm-gtags)
   (require 'helm-gtags)
   ;; Enable helm-gtags-mode
   (add-hook 'dired-mode-hook 'helm-gtags-mode)

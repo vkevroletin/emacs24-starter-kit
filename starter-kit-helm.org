@@ -127,28 +127,51 @@ theme.
             helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
   #+end_src
 
-* Projectile
+* Projectile [3]
 
-TODO: describe
+Easy project management and navigation. C-h p C-h for key bindings help.
 #+begin_src emacs-lisp
   (starter-kit-install-if-needed 'projectile)
   (starter-kit-install-if-needed 'helm-projectile)
 
-  (projectile-global-mode)
+  (require 'projectile)
   (setq projectile-completion-system 'helm)
+  (projectile-global-mode)
   (helm-projectile-on)
 #+end_src
 
+* Speedbar
+
+Speedbar is a program for Emacs which can summarize information
+related to the current buffer. By default it appears in separate
+frame.
+
++ sr-speedbar shows speedbar in separate window instead of separate
+  frame.
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'sr-speedbar)
+  #+end_src
+
++ integrate projectile and speedbar
+
+  when you switch between projects that work with projectile, speedbar
+  will automatically show the directly listing of that project as well
+  as expand the tree to show the file in the project.
+  #+begin_src emacs-lisp
+   (starter-kit-install-if-needed 'projectile-speedbar)
+   (require 'projectile-speedbar)
+  #+end_src
+ 
 * Additional plugins
 
 ** Helm describe bindings
   
-  TODO: describe and add binding
-  #+begin_src emacs-lisp
-    (starter-kit-install-if-needed 'helm-descbinds)
-    (require 'helm-descbinds)
-    (helm-descbinds-mode)
-  #+end_src
+C-c h C-h to describe current helm key bindings.
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'helm-descbinds)
+  (require 'helm-descbinds)
+  (helm-descbinds-mode)
+#+end_src
    
 * Sources
 
