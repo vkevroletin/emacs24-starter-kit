@@ -167,7 +167,8 @@ Hook configures faces after major mode loading. Otherwise I get
 ** Installing Haskell-Mode Extensions
 *** Install flycheck
 #+begin_src emacs-lisp
-  (starter-kit-install-if-needed 'flycheck)
+  (starter-kit-install-if-needed 'flycheck-haskell)
+  (require 'flycheck-haskell)
   (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
   (global-flycheck-mode)
 #+end_src
