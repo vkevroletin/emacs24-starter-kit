@@ -448,20 +448,6 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
   (load custom-file 'noerror)
 #+end_src
 
-* Theme
-
-Theme should be loaded after custom (because custom stores hash sum to
-enable selected theme).
-
-An Emacs port of the Atom Dark theme from Atom.io. Currently there is
-no automated theme installation in Starter Kit so you need to install
-and enable it by hands:
-+ M-x package-install atom-dark
-+ M-x customize-themes
-#+begin_src emacs-lisp
-  (enable-theme 'atom-dark)
-#+end_src
-    
 * Footnotes
 
 [1] If you already have a directory at =~/.emacs.d= move it out of the

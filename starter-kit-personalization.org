@@ -43,7 +43,20 @@ which I don't want to use at home.
     (starter-kit-load "cpp")
   #+end_src
   
-* Improve appearance
+* Improve appearance                                    :manual_installation:
+
+- Enable theme
+
+  Theme should be loaded after custom (because custom stores hash sum to
+  enable selected theme).
+
+  An Emacs port of the Atom Dark theme from Atom.io. Currently there
+  is no automated theme installation in Starter Kit so you need to
+  enable it by hands:
+  + M-x customize-themes
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'atom-dark-theme)
+  #+end_src
 
 - Disable scroll bar
   #+begin_src emacs-lisp
