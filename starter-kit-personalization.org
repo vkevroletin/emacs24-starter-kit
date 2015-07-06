@@ -28,6 +28,19 @@ which I don't want to use at home.
     (starter-kit-load "yasnippet")
   #+end_src
 
+- Cpp mode
+  #+begin_src emacs-lisp
+    (starter-kit-load "cpp")
+  #+end_src
+
+* Improve appearance
+
+- Disable scroll bar
+  #+begin_src emacs-lisp
+    (scroll-bar-mode -1)
+  #+end_src
+
+
 * Enable masked commands
 
 #+begin_src emacs-lisp

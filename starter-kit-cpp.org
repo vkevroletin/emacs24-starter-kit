@@ -1,0 +1,134 @@
+
+* General
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+#+end_src
+  
+* [[https://github.com/emacs-helm/helm][Helm]]
+
+#+begin_src emacs-lisp
+  (eval-after-load 'helm-grep
+    '(setq helm-grep-default-command helm-grep-default-recurse-command))
+#+end_src
+
+Configuration how to http://tuhdo.github.io/helm-intro.html
+
+TODO: decompose into small chunks and properly describe them
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'helm)
+  (require 'helm)
+  (require 'helm-config)
+
+  ;; Must have feature
+  ;; Why does it stucks with history ?
+  ;;(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
+  ;; Cool feature
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (setq helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match    t)
+
+  ;; How does it differ from default helm behavior ? 
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+  ;; Questionable feature
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+
+  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (global-unset-key (kbd "C-x c"))
+
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+  (when (executable-find "curl")
+    (setq helm-google-suggest-use-curl-p t))
+
+  (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+        helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+        helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+        helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+        helm-ff-file-name-history-use-recentf t)
+
+  (helm-mode 1)
+#+end_src
+
+* Gtags
+
+#+begin_src emacs-lisp
+  (setq
+   helm-gtags-ignore-case t
+   helm-gtags-auto-update t
+   helm-gtags-use-input-at-cursor t
+   helm-gtags-pulse-at-cursor t
+   helm-gtags-prefix-key "\C-cg"
+   helm-gtags-suggested-key-mapping t
+   )
+
+  (require 'helm-gtags)
+  ;; Enable helm-gtags-mode
+  (add-hook 'dired-mode-hook 'helm-gtags-mode)
+  (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+  (add-hook 'c-mode-hook 'helm-gtags-mode)
+  (add-hook 'c++-mode-hook 'helm-gtags-mode)
+  (add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+  (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+  (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+  (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+  (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+  (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+#+end_src
+
+* Speedbar
+
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'sr-speedbar)
+#+end_src  
+  
+* Semantics
+
+configuration from http://tuhdo.github.io/c-ide.html
+see also http://www.youtube.com/watch?v=Ib914gNr0ys
+
+#+begin_src emacs-lisp
+
+(require 'cc-mode)
+(require 'semantic)
+(require 'helm-semantic)
+
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
+(semantic-mode 1)
+
+(starter-kit-install-if-needed 'sr-speedbar)
+
+#+end_src
+
+* Ede
+
+#+begin_src emacs-lisp
+  (global-ede-mode t)
+
+  (global-semantic-decoration-mode)
+#+end_src
+
+* Projectile
+
+  http://tuhdo.github.io/helm-projectile.html
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'projectile)
+  (starter-kit-install-if-needed 'helm-projectile)
+
+  (projectile-global-mode)
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on)
+#+end_src
+
