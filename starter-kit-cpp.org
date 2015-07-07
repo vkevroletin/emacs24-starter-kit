@@ -46,63 +46,138 @@ programming project:
 
 * Gtags
 
-#+begin_src emacs-lisp
-  (setq
-   helm-gtags-ignore-case t
-   helm-gtags-auto-update t
-   helm-gtags-use-input-at-cursor t
-   helm-gtags-pulse-at-cursor t
-   helm-gtags-prefix-key "\C-cg"
-   helm-gtags-suggested-key-mapping t)
- 
-  (starter-kit-install-if-needed 'helm-gtags)
-  (require 'helm-gtags)
-  ;; Enable helm-gtags-mode
-  (add-hook 'dired-mode-hook 'helm-gtags-mode)
-  (add-hook 'eshell-mode-hook 'helm-gtags-mode)
-  (add-hook 'c-mode-hook 'helm-gtags-mode)
-  (add-hook 'c++-mode-hook 'helm-gtags-mode)
-  (add-hook 'asm-mode-hook 'helm-gtags-mode)
+** Configure  
 
-  (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-  (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-  (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-  (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-  (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-#+end_src
+- Ignore case
+  #+begin_src emacs-lisp
+    (setq helm-gtags-ignore-case t)
+  #+end_src
+
+- Tag files are updated whenever a file is saved
+  #+begin_src emacs-lisp
+    (setq helm-gtags-auto-update t)
+  #+end_src
+
+- Use input at cursor
+  #+begin_src emacs-lisp
+    (setq helm-gtags-use-input-at-cursor t)
+  #+end_src
+
+- Pulse at point after jumping
+  #+begin_src emacs-lisp
+    (setq helm-gtags-pulse-at-cursor t)
+  #+end_src
+
+- Prefix key for gtags commands
+  #+begin_src emacs-lisp
+    (setq helm-gtags-prefix-key "\C-cg")
+  #+end_src
+
+- Enable default gtags mappings
+
+  Search for helm-gtags-suggested-key-mapping in helm-gtags.el file
+  for details.
+  #+begin_src emacs-lisp
+    (setq helm-gtags-suggested-key-mapping t)
+  #+end_src
+
+** Integrate with Helm
+
+- Install ready package
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'helm-gtags)
+    (require 'helm-gtags)
+  #+end_src
+
+- Enable for several modes
+  #+begin_src emacs-lisp
+    (add-hook 'dired-mode-hook  'helm-gtags-mode)
+    (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+    (add-hook 'c-mode-hook      'helm-gtags-mode)
+    (add-hook 'c++-mode-hook    'helm-gtags-mode)
+    (add-hook 'asm-mode-hook    'helm-gtags-mode)
+  #+end_src
+
+- Configure bindings
+  #+begin_src emacs-lisp
+    (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+    (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
+    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+  #+end_src
 
 * Speedbar
 
+Same window speedbar
 #+begin_src emacs-lisp
   (starter-kit-install-if-needed 'sr-speedbar)
 #+end_src  
   
-* Semantics
+* Semantic
 
 configuration from http://tuhdo.github.io/c-ide.html
 see also http://www.youtube.com/watch?v=Ib914gNr0ys
 
-#+begin_src emacs-lisp
+- Load Semantic
 
-(require 'cc-mode)
-(require 'semantic)
-(require 'helm-semantic)
+  TODO: why do we load it at startup? How about lazy configuration?
+  #+begin_src emacs-lisp
+    (require 'cc-mode)
+    (require 'semantic)
+  #+end_src
 
-(global-semanticdb-minor-mode 1)
-(global-semantic-idle-scheduler-mode 1)
+** Configure
 
-(semantic-mode 1)
+- Maintain tag database.
+  #+begin_src emacs-lisp
+    (global-semanticdb-minor-mode 1)
+  #+end_src
 
-(starter-kit-install-if-needed 'sr-speedbar)
+- Reparse buffer when idle.
+  #+begin_src emacs-lisp
+    (global-semantic-idle-scheduler-mode 1)
+  #+end_src
 
-#+end_src
+- Show summary of tag at point.
+  #+begin_src emacs-lisp
+    (global-semantic-idle-summary-mode 1)
+  #+end_src
+
+- Show completions when idle.
+  #+begin_src emacs-lisp
+    (global-semantic-idle-completions-mode 1)
+  #+end_src
+
+- Additional tag decorations.
+  Useful to understand which includes already parsed by
+  semantic.
+  #+begin_src emacs-lisp
+    (global-semantic-decoration-mode 1)
+    (custom-set-faces
+      '(semantic-tag-boundary-face ((t nil))))
+  #+end_src
+
+- Highlight the current tag.
+  #+begin_src emacs-lisp
+    (global-semantic-highlight-func-mode 1)
+  #+end_src
+
+- Show current fun in header line.
+  #+begin_src emacs-lisp
+    (global-semantic-stickyfunc-mode 1)
+  #+end_src
+
+** Enable
+
+  #+begin_src emacs-lisp
+    (semantic-mode 1)
+  #+end_src
 
 * Ede
 
 #+begin_src emacs-lisp
   (global-ede-mode t)
-
-  (global-semantic-decoration-mode)
 #+end_src
 
