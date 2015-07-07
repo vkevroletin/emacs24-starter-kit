@@ -183,3 +183,12 @@ Enable flyspell for org mode
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 #+end_src
 
+** Appearance
+
+Default color of outline-2 face same with default color in atom-dark
+theme.
+#+begin_src emacs-lisp
+  (custom-set-faces
+    '(outline-2 ((t (:foreground "#8AE234")))))
+#+end_src
+
