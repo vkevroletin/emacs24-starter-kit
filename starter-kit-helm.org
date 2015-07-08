@@ -129,17 +129,29 @@ theme.
 
 * Projectile [3]
 
-Easy project management and navigation. C-h p C-h for key bindings help.
-#+begin_src emacs-lisp
-  (starter-kit-install-if-needed 'projectile)
-  (starter-kit-install-if-needed 'helm-projectile)
+Easy project management and navigation. C-h p C-h for key bindings
+help.
 
-  (require 'projectile)
-  (setq projectile-completion-system 'helm)
-  (projectile-global-mode)
-  (helm-projectile-on)
-#+end_src
+- Install and enable
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'projectile)
+    (starter-kit-install-if-needed 'helm-projectile)
 
+    (require 'projectile)
+    (setq projectile-completion-system 'helm)
+    (projectile-global-mode)
+    (helm-projectile-on)
+  #+end_src
+
+- Set shorter modline
+  #+begin_src emacs-lisp
+    (custom-set-variables
+     '(projectile-mode-line
+       (quote
+        (:eval
+         (format " Proj[%s]"
+                 (projectile-project-name))))))
+  #+end_src
 * Speedbar
 
 Speedbar is a program for Emacs which can summarize information
