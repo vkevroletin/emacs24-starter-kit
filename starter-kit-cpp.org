@@ -215,6 +215,19 @@ Same window speedbar
     (global-company-mode)
   #+end_src
 
+** Appearance
+
+- Tune popup window for atom-dark theme
+  #+begin_src emacs-lisp
+    (custom-set-faces
+      '(company-scrollbar-bg ((t (:inherit company-tooltip :background "#96CBFE"))))
+      '(company-scrollbar-fg ((t (:background "dim gray"))))
+      '(company-tooltip ((t (:background "#c5c8c6" :foreground "#1d1f21"))))
+      '(company-tooltip-common ((t (:inherit company-tooltip :foreground "red4"))))
+      '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "white"))))
+      '(company-tooltip-selection ((t (:inherit company-tooltip :background "white")))))
+  #+end_src
+
 * References
 
 [1] http://tuhdo.github.io/c-ide.html
