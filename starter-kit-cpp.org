@@ -114,11 +114,10 @@ Same window speedbar
 #+begin_src emacs-lisp
   (starter-kit-install-if-needed 'sr-speedbar)
 #+end_src  
-  
+
 * Semantic
 
-configuration from http://tuhdo.github.io/c-ide.html
-see also http://www.youtube.com/watch?v=Ib914gNr0ys
+[1]
 
 - Load Semantic
 
@@ -140,16 +139,6 @@ see also http://www.youtube.com/watch?v=Ib914gNr0ys
     (global-semantic-idle-scheduler-mode 1)
   #+end_src
 
-- Show summary of tag at point.
-  #+begin_src emacs-lisp
-    (global-semantic-idle-summary-mode 1)
-  #+end_src
-
-- Show completions when idle.
-  #+begin_src emacs-lisp
-    (global-semantic-idle-completions-mode 1)
-  #+end_src
-
 - Additional tag decorations.
   Useful to understand which includes already parsed by
   semantic.
@@ -169,6 +158,24 @@ see also http://www.youtube.com/watch?v=Ib914gNr0ys
     (global-semantic-stickyfunc-mode 1)
   #+end_src
 
+- Don't show summary of tag at point.
+  #+begin_src emacs-lisp
+    (global-semantic-idle-summary-mode 0)
+  #+end_src
+
+- Don't Show completions when idle.
+  #+begin_src emacs-lisp
+    (global-semantic-idle-completions-mode 0)
+  #+end_src
+
+** Keybindings
+
+- C-c j is semantic fast jump in any buffer
+  Configure global key binding since semantic is enabled globally.
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-c j") 'semantic-ia-fast-jump)
+  #+end_src
+
 ** Enable
 
   #+begin_src emacs-lisp
@@ -181,3 +188,35 @@ see also http://www.youtube.com/watch?v=Ib914gNr0ys
   (global-ede-mode t)
 #+end_src
 
+* Company
+
+- Install
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'company)
+    (starter-kit-install-if-needed 'helm-company)
+    (require 'company)
+    (add-hook 'after-init-hook 'global-company-mode)
+  #+end_src
+
+- Define completion keybinding [3]
+  C-S-<return> for helm-style completion (in new window)
+  C-<return> for company-style completion (in pupup)
+  #+begin_src emacs-lisp
+    (eval-after-load 'company
+      '(progn
+         (define-key company-mode-map (kbd "C-S-<return>") 'helm-company)
+         (define-key company-active-map (kbd "C-S-<return>") 'helm-company)
+         (define-key company-mode-map (kbd "C-<return>") 'company-complete)
+         (define-key company-active-map (kbd "C-<return>") 'company-complete)))
+  #+end_src
+
+- Enable company globally
+  #+begin_src emacs-lisp
+    (global-company-mode)
+  #+end_src
+
+* References
+
+[1] http://tuhdo.github.io/c-ide.html
+[2] http://www.youtube.com/watch?v=Ib914gNr0ys
+[3] https://github.com/yasuyk/helm-company
