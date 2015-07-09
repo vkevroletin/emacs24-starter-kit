@@ -84,6 +84,13 @@ We are going to avoid movement of right hand to right part of keyboard.
     (define-key org-mode-map (kbd "M-h") 'backward-delete-char-untabify)
   #+end_src
 
+* Fight tabs and white spaces
+
+- Good bye trailing white spaces
+  #+begin_src emacs-lisp
+    (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  #+end_src
+
 * Environment fixes
 
 + Emacs can't execute some programs which are available from command
