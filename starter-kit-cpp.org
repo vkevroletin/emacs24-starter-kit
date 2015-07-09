@@ -215,6 +215,19 @@ Same window speedbar
     (global-company-mode)
   #+end_src
 
+- Fast popup but from 3rd character [4]
+  #+begin_src emacs-lisp
+    (setq company-idle-delay 0.5)
+    (setq company-minimum-prefix-length 2)
+  #+end_src
+
+- Invert the navigation direction if the the completion
+  popup-isearch-match is displayed on top (happens near the bottom of
+  windows) [4]
+  #+begin_src emacs-lisp
+    (setq company-tooltip-flip-when-above t)
+  #+end_src
+
 ** Appearance
 
 - Tune popup window for atom-dark theme
@@ -233,3 +246,4 @@ Same window speedbar
 [1] http://tuhdo.github.io/c-ide.html
 [2] http://www.youtube.com/watch?v=Ib914gNr0ys
 [3] https://github.com/yasuyk/helm-company
+[4] [[https://github.com/bbatsov/prelude/blob/master/modules/prelude-company.el][Prelude company config]]
