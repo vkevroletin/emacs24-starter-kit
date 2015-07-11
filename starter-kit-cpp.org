@@ -46,31 +46,14 @@ programming project:
 
 ** Compilation
 
-- Ask compilation command for first time and then run recompile.
-  #+begin_src emacs-lisp
-    (defun my:compile-or-recompile(&optional arg)
-      "During first call (or with prefix argument) asks compilation
-directory and command. All successive calls without prefix argument cause
-recompilation"
-      (interactive "P")
-      (if (and compilation-directory
-               (not (consp arg)))
-          (recompile)
-        (let ((dir (read-directory-name "Compile in: "
-                                        (or compilation-directory default-directory))))
-          (unless (eq dir "")
-            (setq compilation-directory dir)
-            (call-interactively 'compile)))))
-  #+end_src
-
 - By default C-c C-c is bound to comment-region which is not very
   usefull command. C-c C-c is super useful command in org-mode. Let's
   make is useful in c++ mode.
 
   #+begin_src emacs-lisp
     (require 'cc-mode)
-    (define-key c-mode-map (kbd "C-c C-c") 'my:compile-or-recompile)
-    (define-key c++-mode-map (kbd "C-c C-c") 'my:compile-or-recompile)
+    (define-key c-mode-map (kbd "C-c C-c") 'compile)
+    (define-key c++-mode-map (kbd "C-c C-c") 'compile)
   #+end_src
 
 * Gtags

@@ -43,6 +43,11 @@ which I don't want to use at home.
     (starter-kit-load "cpp")
   #+end_src
 
+- Lisp
+  #+begin_src emacs-lisp
+    (starter-kit-load "lisp")
+  #+end_src
+
 * Improve appearance                                    :manual_installation:
 
 - Enable theme
@@ -62,6 +67,28 @@ which I don't want to use at home.
   #+begin_src emacs-lisp
     (scroll-bar-mode -1)
   #+end_src
+
+* Improve compile command
+
+- Problems of default compile command
+
+  Default ~compile~ stores last compilation command and directory.
+  Following calls to ~recompile~ use them so you can repeat exactly same
+  compilation from other directory. This approach works well unless you
+  edit several projects in same time.
+
+- Enhanced compile command
+  + Asks for directory instead of using current directory. So you
+    don't have to ~cd~.
+  + Combines ~compile~ and ~recompile~ in same function. First call
+    asks for directory and command, successive calls just recompile.
+  + Knows about projects defined by Projectile
+    Separate pairs of directory/command per project.
+  + TODO: +Persists cache between sessions+.
+#+begin_src emacs-lisp
+  (require 'compile-per-project)
+  (fset 'compile 'compile-per-project)
+#+end_src
 
 * Basic keybinding
 
