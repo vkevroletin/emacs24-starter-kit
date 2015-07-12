@@ -84,7 +84,7 @@ which I don't want to use at home.
     asks for directory and command, successive calls just recompile.
   + Knows about projects defined by Projectile
     Separate pairs of directory/command per project.
-  + TODO: +Persists cache between sessions+.
+  + Persists cache between sessions.
 #+begin_src emacs-lisp
   (require 'compile-per-project)
   (fset 'compile 'compile-per-project)
