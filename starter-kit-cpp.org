@@ -52,8 +52,8 @@ programming project:
 
   #+begin_src emacs-lisp
     (require 'cc-mode)
-    (define-key c-mode-map (kbd "C-c C-c") 'compile)
-    (define-key c++-mode-map (kbd "C-c C-c") 'compile)
+    (define-key c-mode-map (kbd "C-c C-c") 'recompile)
+    (define-key c++-mode-map (kbd "C-c C-c") 'recompile)
   #+end_src
 
 * Gtags

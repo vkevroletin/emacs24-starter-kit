@@ -88,6 +88,7 @@ which I don't want to use at home.
 #+begin_src emacs-lisp
   (require 'compile-per-project)
   (fset 'compile 'compile-per-project)
+  (fset 'recompile 'recompile-per-project)
 #+end_src
 
 * Basic keybinding

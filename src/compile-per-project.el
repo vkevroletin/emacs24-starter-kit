@@ -28,8 +28,8 @@
   :group 'compile-per-project
   :type 'string)
 
-
 ;;; Implementation
+
 (defclass compilation-command ()
   ((directory :documentation "Compilation directory"
               :initarg :directory
@@ -96,6 +96,10 @@ Returns nil of there is no project."
            my:compile-cmd-map))
 
 (defun compile-per-project(&optional arg)
+  (interactive)
+  (recompile-per-project '(P)))
+
+(defun recompile-per-project(&optional arg)
   "During first call (or with prefix argument) asks compilation
 directory and command. All successive calls without prefix argument cause
 recompilation"
@@ -177,4 +181,4 @@ and calls compilation-start with right argument."
 (add-to-list 'kill-emacs-hook 'my:store-cache-into-file)
 
 (provide 'compile-per-project)
-;;; scratch.el ends here
+;;; compile-per-project.el ends here
