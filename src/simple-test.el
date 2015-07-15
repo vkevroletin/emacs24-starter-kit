@@ -3,21 +3,21 @@
 ;; No macro. No pain. Jump to failed test and directly execute with C-M-x.
 ;;
 
-(defvar simple-tests (list))
+(defvar simple-test-list (list))
 
-(defvar simple-tests-in-progress nil)
+(defvar simple-test-in-progress nil)
 
 (defun simple-test-init ()
-  (setq simple-tests-in-progress t)
-  (setq simple-tests (list)))
+  (setq simple-test-in-progress t)
+  (setq simple-test-list (list)))
 
 (defun simple-test (name body)
-  (if simple-tests-in-progress
-      (push (cons name body) simple-tests)
+  (if simple-test-in-progress
+      (push (cons name body) simple-test-list)
     (let ((debug-on-error t)
           (debug-on-signal t)
-          (debug-on-quit t)))
-    (funcall body)))
+          (debug-on-quit t))
+      (funcall body))))
 
 (defun check (name body)
   (condition-case err
@@ -34,24 +34,42 @@
     (error
      t)))
 
-(defun simple-tests-run ()
-  (when (not simple-tests-in-progress)
-    (error "1) call simple-test-init 2) define tests 3) call simple-tests-run"))
-  (let ((ok-cnt 0)
-        (fail-cnt 0))
-    (dolist (test (reverse simple-tests))
-      (message ">> Execute test '%s':" (car test))
-      (condition-case err
-          (progn
-            (funcall (cdr test))
-            (setq ok-cnt (+ 1 ok-cnt))
-            (message "   ok"))
-        (error
-         (setq fail-cnt (+ 1 fail-cnt))
-         (message (format "   test '%s' failed:\n   %s" (car test) (nth 1 err))))))
-    (let ((result (format  "Tests summary: ok %d, failed %d" ok-cnt fail-cnt)))
-      (message result)
-      result))
-  (setq simple-tests-in-progress nil))
+(defun with-new-functions (fname-body-list expr)
+  "Let for several functions. Useful to make isolated test environment in case of
+dynamic binding."
+  (let* ((get-current-fun (lambda (x)
+                            (list x (symbol-function x))))
+         (old-funs (mapcar (lambda (x)
+                             (funcall get-current-fun (car x)))
+                           fname-body-list)))
+    (unwind-protect
+        (progn
+          (dolist (x fname-body-list)
+            (fset (car x) (nth 1 x)))
+          (funcall expr))
+      (dolist (x old-funs)
+       (fset (car x) (nth 1 x))))))
+
+(defun simple-test-run ()
+  (unwind-protect
+      (progn
+        (when (not simple-test-in-progress)
+          (error "1) call simple-test-init 2) define tests 3) call simple-test-run"))
+        (let ((ok-cnt 0)
+              (fail-cnt 0))
+          (dolist (test (reverse simple-test-list))
+            (message ">> Execute test '%s':" (car test))
+            (condition-case err
+                (progn
+                  (funcall (cdr test))
+                  (setq ok-cnt (+ 1 ok-cnt))
+                  (message "   ok"))
+              (error
+               (setq fail-cnt (+ 1 fail-cnt))
+               (message (format "   test '%s' failed:\n   %s" (car test) (nth 1 err))))))
+          (let ((result (format  "Tests summary: ok %d, failed %d" ok-cnt fail-cnt)))
+            (message result)
+            result)))
+    (setq simple-test-in-progress nil)))
 
 (provide 'simple-test)
