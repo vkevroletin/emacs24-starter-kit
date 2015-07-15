@@ -82,6 +82,6 @@
      (expect "unchanged value of 2nd counter"
              (lambda () (equal 0 (<-> 'get cnt2)))))))
 
-(simple-tests-run)
+(simple-test-run)
 
 (provide 'simple-interface-test)
