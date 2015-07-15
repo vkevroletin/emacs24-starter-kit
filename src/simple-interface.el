@@ -1,4 +1,4 @@
-;;; experimental --- javascript-like objects in emacs lisp -*- lexical-binding: t -
+;;; simple-interface --- javascript-like objects in emacs lisp -*- lexical-binding: t -
 
 ;;; Commentary:
 
@@ -9,7 +9,7 @@
     interface))
 
 ;; call interface function and pass interface as first argument
-(defun dispatch (method interface &rest args)
+(defun <> (method interface &rest args)
   (unless (and interface (hash-table-p interface))
     (error "expected hash table with functions"))
   (let ((f (gethash method interface)))
@@ -17,11 +17,11 @@
       (error "interface doesn't have requested method %s" method))
     (apply f interface args)))
 
-(fset '<> 'dispatch)
+(fset 'dispatch '<>)
 
 ;; unpack pair of interface and data and call function from interface
 ;; passing interface and data as first two parameters
-(defun dispatch-obj (method pair &rest args)
+(defun <-> (method pair &rest args)
   (unless (consp pair)
     (error "expected pair as first argument"))
   (let ((interface (car pair))
@@ -33,7 +33,7 @@
         (error "interface doesn't have requested method %s" method))
       (apply f interface data args))))
 
-(fset '<-> 'dispatch-obj)
+(fset 'dispatch-obj '<->)
 
 ;; bless
 (defun bless (interface obj)
@@ -47,5 +47,5 @@
 (defun <<I (blessed)
   (car blessed))
 
-(provide 'experimental)
-;;; experimental ends here
+(provide 'simple-interface)
+;;; simple-interface.el ends here
