@@ -42,19 +42,19 @@
  (lambda ()
    (let ((intf (si-test-plain-interface-module)))
 
-     (expect "call function1"
+     (check "call function1"
              (lambda () (equal  "magic1"
                            (<> 'function1 intf))))
 
-     (expect "call function2"
+     (check "call function2"
              (lambda () (equal "magic2"
                           (<> 'function2 intf))))
 
-     (expect "call recursive function"
+     (check "call recursive function"
              (lambda () (equal "magic1"
                           (<> 'function3 intf))))
 
-     (expect-error "call of wrong method cause error"
+     (check-error "call of wrong method cause error"
                    (lambda () (<> intf 'wrong-method))))))
 
 (simple-test
@@ -64,22 +64,22 @@
           (cnt1 (<> 'new cnt-intf))
           (cnt2 (<> 'new cnt-intf)))
 
-     (expect "init values of 1st counter"
+     (check "init values of 1st counter"
              (lambda () (equal 0 (<-> 'get cnt1))))
 
-     (expect "init value of 2nd counter"
+     (check "init value of 2nd counter"
              (lambda () (equal 0 (<-> 'get cnt2))))
 
-     (expect "add several times"
+     (check "add several times"
              (lambda ()
                (<-> 'add cnt1 10)
                (<-> 'add cnt1 10)
                t))
 
-     (expect "new value of 1st counter"
+     (check "new value of 1st counter"
              (lambda () (equal 20 (<-> 'get cnt1))))
 
-     (expect "unchanged value of 2nd counter"
+     (check "unchanged value of 2nd counter"
              (lambda () (equal 0 (<-> 'get cnt2)))))))
 
 (simple-test-run)

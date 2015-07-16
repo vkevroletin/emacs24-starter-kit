@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -
 ;; Simple test runner
 ;;
 ;; No macro. No pain. Jump to failed test and directly execute with C-M-x.
@@ -24,7 +25,7 @@
       (unless (funcall body)
         (error "result is nil"))
     (error
-     (error (format "check '%s' failed: %s" name (nth 1 err))))))
+     (error (format "check '%s' failed: %s" name err)))))
 
 (defun check-error (name body)
   (condition-case err
@@ -66,7 +67,7 @@ dynamic binding."
                   (message "   ok"))
               (error
                (setq fail-cnt (+ 1 fail-cnt))
-               (message (format "   test '%s' failed:\n   %s" (car test) (nth 1 err))))))
+               (message (format "   test '%s' failed:\n   %s" (car test) err)))))
           (let ((result (format  "Tests summary: ok %d, failed %d" ok-cnt fail-cnt)))
             (message result)
             result)))
