@@ -85,11 +85,18 @@ which I don't want to use at home.
   + Knows about projects defined by Projectile
     Separate pairs of directory/command per project.
   + Persists cache between sessions.
-#+begin_src emacs-lisp
-  (require 'compile-per-project)
-  (fset 'compile 'compile-per-project)
-  (fset 'recompile 'recompile-per-project)
-#+end_src
+  #+begin_src emacs-lisp
+    (require 'compile-per-project)
+    (fset 'compile 'compile-per-project/compile)
+    (fset 'recompile 'recompile-per-project/recompile)
+  #+end_src
+
+  + Run is similar to compile but with it's own cache
+  #+begin_src emacs-lisp
+    (defun run(&optional arg)
+        (interactive "P")
+        (compile-per-project/run))
+  #+end_src
 
 * Basic keybinding
 

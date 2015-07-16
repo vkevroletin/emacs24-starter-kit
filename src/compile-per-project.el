@@ -1,4 +1,4 @@
-;;; compile-per-project --- remember compilation command per project
+;;; compile-per-project --- remember compilation command per project -*- lexical-binding: t -
 
 ;;; Commentary:
 
@@ -33,7 +33,7 @@
 
 ;;; Implementation
 
-(defclass compilation-command ()
+(defclass compile-per-project/compilation-command ()
   ((directory :documentation "Compilation directory"
               :initarg :directory
               :type string
@@ -51,22 +51,35 @@ during current session or no"
                      :writer set-already-executed))
   "Data required to repeat build command.")
 
-(defvar my:compile-cmd-map)
+(defvar compile-per-project/compile-cmd-map (make-hash-table :test 'equal))
 
-(defun my:init-compile-cmd-map()
-  (setq my:compile-cmd-map (make-hash-table :test 'equal)))
+(defun compile-per-project/init-compile-cmd-map ()
+  (setq compile-per-project/compile-cmd-map (make-hash-table :test 'equal)))
+
+(defun compile-per-project/print-compile-cmd-map ()
+  (let ((result '()))
+    (maphash (lambda (command proj-cache)
+               (push (format "%s:\n" command) result)
+               (maphash (lambda (proj value)
+                          (push (format "    %s -> %s\n" proj value) result))
+                        proj-cache))
+             compile-per-project/compile-cmd-map)
+    (concat result)))
 
 ;; reuse projectile-unserialize
-(defun my:load-cache-file ()
-  (setq my:compile-cmd-map
+(defun compile-per-project/load-cache-file ()
+  (setq compile-per-project/compile-cmd-map
         (projectile-unserialize cache-file))
-  (maphash (lambda (k v) (set-already-executed v nil))
-           my:compile-cmd-map))
+  (maphash (lambda (k1 cache)
+             (maphash (lambda (k2 value)
+                        (set-already-executed value nil))
+                      cache))
+           compile-per-project/compile-cmd-map))
 
-(defun my:store-cache-into-file ()
-  (projectile-serialize my:compile-cmd-map cache-file))
+(defun compile-per-project/store-cache-into-file ()
+  (projectile-serialize compile-per-project/compile-cmd-map cache-file))
 
-(defun my:project-dir()
+(defun compile-per-project/project-dir()
   "Determines project root using Projectile package and returns absolute path.
 Returns nil of there is no project."
   (let ((projectile-require-project-root t))
@@ -74,13 +87,7 @@ Returns nil of there is no project."
         (projectile-project-root)
       (error ()))))
 
-(defun my:recompile(compile-obj)
-  (let ((default-directory (get-directory compile-obj))
-        (command (get-command compile-obj)))
-    (compilation-start command))
-  compile-obj)
-
-(defun my:ask-and-recompile(last-compile-obj)
+(defun compile-per-project/ask-and-recompile(last-compile-obj recompile-body)
   (let* ((advice-dir (or (and last-compile-obj (get-directory last-compile-obj))
                          compilation-directory
                          default-directory))
@@ -88,39 +95,101 @@ Returns nil of there is no project."
                          (eval compile-command))) ; eval is from recompile definition
          (dir (read-directory-name "Compile in: " advice-dir))
          (cmd (compilation-read-command advice-cmd))
-         (new-compile-obj (compilation-command "compilation-command"
-                                               :directory dir :command cmd)))
-    (my:recompile new-compile-obj)
+         (new-compile-obj (compile-per-project/compilation-command
+                           "compilation-command"
+                           :directory dir :command cmd)))
+    (funcall recompile-body new-compile-obj)
     new-compile-obj))
 
-(defun my:cache-executed-command (project-id compile-obj)
-  (puthash project-id
-           (clone compile-obj :already-executed t)
-           my:compile-cmd-map))
+(defun compile-per-project/cache-executed-command (wrapped-command-name project-id compile-obj)
+  (let ((proj-cache (gethash project-id compile-per-project/compile-cmd-map)))
+    (unless proj-cache
+      (setq proj-cache (make-hash-table :test 'equal))
+      (puthash project-id proj-cache compile-per-project/compile-cmd-map))
+    (puthash wrapped-command-name
+             (clone compile-obj :already-executed t)
+             proj-cache)))
 
-(defun compile-per-project(&optional arg)
-  (interactive)
-  (recompile-per-project '(P)))
+(defun compile-per-project/get-from-cache (wrapped-command-name project-name)
+  (let ((proj-cache (gethash project-name compile-per-project/compile-cmd-map)))
+    (if proj-cache
+        (gethash wrapped-command-name proj-cache)
+      nil)))
 
-(defun recompile-per-project(&optional arg)
-  "During first call (or with prefix argument) asks compilation
-directory and command. All successive calls without prefix argument cause
-recompilation"
+(defun compile-per-project/wrap-command (wrapped-command-name recompile-body)
+  (lambda (is-force-dialog)
+    (let* ((project-id (compile-per-project/project-dir))
+           (last-compile-obj (compile-per-project/get-from-cache wrapped-command-name project-id))
+           (executed-command (if (and last-compile-obj
+                                      (is-already-executed last-compile-obj)
+                                      (not is-force-dialog))
+                                 (progn
+                                   (funcall recompile-body last-compile-obj)
+                                   last-compile-obj)
+                               (compile-per-project/ask-and-recompile last-compile-obj
+                                                                      recompile-body))))
+      (compile-per-project/cache-executed-command wrapped-command-name
+                                                  project-id
+                                                  executed-command))))
+
+(setq compile-per-project/recompile-impl-body
+      (lambda (compile-obj)
+        (let ((default-directory (get-directory compile-obj))
+              (command (get-command compile-obj)))
+          (compilation-start command))))
+
+(setq compile-per-project/recompile-impl
+      (compile-per-project/wrap-command "compile" compile-per-project/recompile-impl-body))
+
+(setq compile-per-project/run-impl
+      (compile-per-project/wrap-command "run" compile-per-project/recompile-impl-body))
+
+(defun compile-per-project/recompile (&optional arg)
   (interactive "P")
-  (let* ((project-id (my:project-dir))
-         (last-compile-obj (gethash  project-id my:compile-cmd-map))
-         (is-force-dialog (consp arg)))
-    (my:cache-executed-command
-     project-id
-     (if (and last-compile-obj
-              (is-already-executed last-compile-obj)
-              (not is-force-dialog))
-         (my:recompile last-compile-obj)
-       (my:ask-and-recompile last-compile-obj)))))
+  (funcall compile-per-project/recompile-impl (consp arg)))
+
+(defun compile-per-project/compile ()
+  (interactive)
+  (compile-per-project/recompile '(t)))
+
+(defun compile-per-project/run (&optional arg)
+  (interactive "P")
+  (funcall compile-per-project/run-impl (consp arg)))
 
 ;; TODO: move hook change into configuration files
-(my:load-cache-file)
-(add-to-list 'kill-emacs-hook 'my:store-cache-into-file)
+;; (compile-per-project/load-cache-file)
+;;(compile-per-project/init-compile-cmd-map)
+
+(compile-per-project/load-cache-file)
+(add-to-list 'kill-emacs-hook 'compile-per-project/store-cache-into-file)
+
+;; TODO: fix old test
+;; (simple-test-init)
+
+;; (simple-test
+;;  "check caching functions"
+;;  (lambda ()
+;;    (let ((compile-per-project/compile-cmd-map)
+;;          (test-cmd (compile-per-project/compilation-command "test"
+;;                                                             :directory "dir123"
+;;                                                             :command "cmd123"
+;;                                                             :already-executed nil)))
+;;      (compile-per-project/init-compile-cmd-map)
+;;      (compile-per-project/cache-executed-command "test" "proj1" test-cmd)
+;;      (check "inserted command available"
+;;             (lambda () (compile-per-project/get-from-cache "test" "proj1"))))))
+
+;; (simple-test
+;;  "dev"
+;;  (lambda ()
+;;    (let* ((test (lambda (cmd) (message "good")))
+;;           (f (compile-per-project/wrap-command "test" test)))
+
+;;      (funcall f t)
+
+;;      t)))
+
+;; (simple-test-run)
 
 (provide 'compile-per-project)
 ;;; compile-per-project.el ends here
