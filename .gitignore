@@ -19,7 +19,6 @@ image-dired/*
 elim/*
 doc/*
 elpa/*
-src/*
 themes/*
 url/*
 
