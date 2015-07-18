@@ -44,6 +44,13 @@ programming project:
 
   Didn't investigate.
 
+** Run common programming hooks
+
+#+begin_src emacs-lisp
+  (add-hook 'c-mode-hook 'run-starter-kit-coding-hook)
+  (add-hook 'c++-mode-hook 'run-starter-kit-coding-hook)
+#+end_src
+
 ** Compilation
 
 - By default C-c C-c is bound to comment-region which is not very

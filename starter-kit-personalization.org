@@ -104,7 +104,9 @@ which I don't want to use at home.
     (global-set-key (kbd "<f6>") #'run)
   #+end_src
 
-* Basic keybinding
+* Improve editing productivity
+
+** Key bindings
 
 We are going to avoid movement of right hand to right part of keyboard.
 
@@ -132,6 +134,47 @@ We are going to avoid movement of right hand to right part of keyboard.
     (add-hook 'before-save-hook 'delete-trailing-whitespace)
   #+end_src
 
+* Relative linum
+
+Relative linum helps to quickly jump to required line.
+
+- Install
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'linum-relative)
+    (require 'linum-relative)
+
+    (defun starter-kit-enable-linum ()
+      (interactive)
+      (linum-mode))
+  #+end_src
+
+- Enable for programming languages
+  #+begin_src emacs-lisp
+    (add-hook 'starter-kit-coding-hook #'starter-kit-enable-linum)
+  #+end_src
+
+- Improve appearance
+  #+begin_src
+    (custom-set-variables
+      '(linum-relative-current-symbol ">"))
+
+    (custom-set-faces
+      '(linum-relative-current-face ((t (:inherit linum)))))
+  #+end_src
+
+** Isearch
+
++ C-k to kill selected text during isearch [1]
+  #+begin_src emacs-lisp
+    (defun kill-isearch-match ()
+      "Kill the current isearch match string and continue searching."
+      (interactive)
+      (kill-region isearch-other-end (point))
+      (isearch-exit))
+
+    (define-key isearch-mode-map [(control k)] 'kill-isearch-match)
+  #+end_src
+
 * Environment fixes
 
 + Emacs can't execute some programs which are available from command
@@ -147,3 +190,7 @@ We are going to avoid movement of right hand to right part of keyboard.
 #+begin_src emacs-lisp
   (put 'narrow-to-region 'disabled nil)
 #+end_src
+
+* References
+
+[1] http://www.emacswiki.org/emacs/KillISearchMatch
