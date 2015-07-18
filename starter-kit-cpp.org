@@ -253,6 +253,50 @@ Same window speedbar
       '(company-tooltip-selection ((t (:inherit company-tooltip :background "white")))))
   #+end_src
 
+* Insert header guards
+
+  You definitely know what is header guard. Here is example:
+  #+begin_example
+    #ifndef __SAMPLE_HEADER_H
+    #define __SAMPLE_HEADER_H
+  #+end_example
+
++ Generate and insert header guards. Inspired by code from [[http://www.emacswiki.org/emacs/AutoInsertHeaderGuards][Emacs wiki]].
+  #+begin_src emacs-lisp
+    (defun cpp--create-define-name (x)
+      (let* ((case-fold-search nil)
+             (name (upcase (replace-regexp-in-string "\\([A-Z]\\)" "_\\1" x))))
+        (concat "__" name "_H")))
+
+    (defun insert-cpp-header-guards ()
+      (interactive)
+      (when (buffer-file-name)
+        (let*
+            ((fName (file-name-nondirectory (file-name-sans-extension buffer-file-name)))
+             (defName (cpp--create-define-name fName))
+             (ifDef (concat "#ifndef " defName "\n#define " defName "\n\n\n")))
+          (set-mark (point))
+          (goto-char (point-min))
+          (insert ifDef)
+          (goto-char (point-max))
+          (insert "\n#endif")
+          (goto-char (point-min))
+          (dotimes (i 3) (forward-line)))))
+  #+end_src
+
++ Ask to insert guards after opening of empty header file. It will
+  work in case of creating new file.
+  #+begin_src emacs-lisp
+    (defun insert-cpp-header-guard-if-buffer-empty ()
+      (when (and (string-match ".h$" (buffer-name))
+                 (= 0 (buffer-size))
+                 (yes-or-no-p "Header file is empty. Create include guards?"))
+        (insert-cpp-header-guards)))
+
+    (add-hook 'c++-mode-hook 'insert-cpp-header-guard-if-buffer-empty)
+  #+end_src
+
+
 * References
 
 [1] http://tuhdo.github.io/c-ide.html
