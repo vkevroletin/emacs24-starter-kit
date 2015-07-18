@@ -185,6 +185,17 @@ Relative linum helps to quickly jump to required line.
       (exec-path-from-shell-initialize))
   #+end_src
 
++ Show ansi colors in compilation buffer [2]
+
+  #+begin_src emacs-lisp
+    (ignore-errors
+      (require 'ansi-color)
+      (defun starter-kit-colorize-compilation-buffer ()
+        (when (eq major-mode 'compilation-mode)
+          (ansi-color-apply-on-region compilation-filter-start (point-max))))
+      (add-hook 'compilation-filter-hook 'starter-kit-colorize-compilation-buffer))
+  #+end_src
+
 * Enable masked commands
 
 #+begin_src emacs-lisp
@@ -194,3 +205,4 @@ Relative linum helps to quickly jump to required line.
 * References
 
 [1] http://www.emacswiki.org/emacs/KillISearchMatch
+[2] http://stackoverflow.com/questions/13397737/ansi-coloring-in-compilation-mode
