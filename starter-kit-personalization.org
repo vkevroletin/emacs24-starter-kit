@@ -87,8 +87,8 @@ which I don't want to use at home.
   + Persists cache between sessions.
   #+begin_src emacs-lisp
     (require 'compile-per-project)
-    (fset 'compile 'compile-per-project/compile)
-    (fset 'recompile 'recompile-per-project/recompile)
+    (fset #'compile   'compile-per-project/compile)
+    (fset #'recompile 'compile-per-project/recompile)
   #+end_src
 
   + Run is similar to compile but with it's own cache
@@ -96,6 +96,12 @@ which I don't want to use at home.
     (defun run(&optional arg)
         (interactive "P")
         (compile-per-project/run))
+  #+end_src
+
+- Key bindings for compile commands
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "<f5>") #'recompile)
+    (global-set-key (kbd "<f6>") #'run)
   #+end_src
 
 * Basic keybinding
