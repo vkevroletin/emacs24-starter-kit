@@ -121,6 +121,7 @@ Returns nil of there is no project."
   (lambda (compile-obj)
     (let ((default-directory (get-directory compile-obj))
           (command (get-command compile-obj)))
+      (projectile-save-project-buffers)
       (compilation-start command))))
 
 (defvar compile-per-project/recompile-impl
