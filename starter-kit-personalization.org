@@ -122,9 +122,10 @@ We are going to avoid movement of right hand to right part of keyboard.
   which is extremely useful Emacs feature. Let's use M-h to delete
   character backward.
   #+begin_src emacs-lisp
-    (global-set-key (kbd "M-h") 'backward-delete-char-untabify)
+    (global-set-key (kbd "M-h") #'backward-delete-char-untabify)
     (require 'org)
-    (define-key org-mode-map (kbd "M-h") 'backward-delete-char-untabify)
+    (define-key org-mode-map (kbd "M-h") #'backward-delete-char-untabify)
+    (define-key c-mode-base-map (kbd "C-M-h") #'backward-kill-word)
   #+end_src
 
 * Fight tabs and white spaces
