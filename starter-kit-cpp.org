@@ -21,13 +21,28 @@ programming project:
     investigate them.
 
 + code completion
-  - auto-complete, hippie-expand - not accurate completion which
-    cache strings from current buffer. Extremely simple and not very
-    useful for c++ development.
+  - auto-complete, company - interactive popups with different
+    completion sources. Looks like auto-complete puts all candidates
+    from different sources into single list while company chooses
+    first completion source which returned results. After little
+    investigation without any tuning:
+    + auto-complete looks better for text
+    + company looks better for code.
 
-  - Semantic - let's investigate.
+  - hippie-expand - not accurate completion which caches strings from
+    open buffers. Extremely simple but works everywhere (for example
+    in modeline). Actually hippie-expand have different cheating
+    completion function which could be tuned for better results.
 
-  - gcc/clang -  should be very accurate. Didn't investigate them.
+  - Semantic - semantic provides several completion functions defined
+    in file semantic/ia.el /(Interactive Analysis functions)/.
+    + semantic-ia-complete-tip (not usefull)
+    + semantic-ia-complete-symbol (provides good candidates but
+      provides bad interface).
+    Company mode have semantic backend which in theory should work in
+    same way as semantic-ia-complete-symbol.
+
+  - gcc/clang - should be very accurate. Didn't investigate them.
 
 + string search through project files
   - projectile and helm helps to quickly grep through project files.
@@ -148,7 +163,9 @@ Same window speedbar
 
 ** Configure
 
-- Maintain tag database.
+- Maintain tag database. This significantly improve semantic
+  performance. Otherwise semantic will parse standard headers each
+  session.
   #+begin_src emacs-lisp
     (global-semanticdb-minor-mode 1)
   #+end_src
@@ -156,15 +173,6 @@ Same window speedbar
 - Reparse buffer when idle.
   #+begin_src emacs-lisp
     (global-semantic-idle-scheduler-mode 1)
-  #+end_src
-
-- Additional tag decorations.
-  Useful to understand which includes already parsed by
-  semantic.
-  #+begin_src emacs-lisp
-    (global-semantic-decoration-mode 1)
-    (custom-set-faces
-      '(semantic-tag-boundary-face ((t nil))))
   #+end_src
 
 - Highlight the current tag.
@@ -177,14 +185,37 @@ Same window speedbar
     (global-semantic-stickyfunc-mode 1)
   #+end_src
 
-- Don't show summary of tag at point.
+- Don't show summary of tag at point. It hides useful messages.
   #+begin_src emacs-lisp
     (global-semantic-idle-summary-mode 0)
   #+end_src
 
-- Don't Show completions when idle.
+- Don't Show completions when idle. We already use company to complete.
   #+begin_src emacs-lisp
     (global-semantic-idle-completions-mode 0)
+  #+end_src
+
+*** Understand why semantic doesn't work perfectly
+
+- Show unparsed code. Press C-c , to fix.
+  #+begin_src emacs-lisp
+    (global-semantic-show-parser-state-mode 1)
+    (global-semantic-show-unmatched-syntax-mode 1)
+  #+end_src
+
+- Additional tag decorations.
+  Useful to understand which includes already parsed by
+  semantic.
+  #+begin_src emacs-lisp
+    (global-semantic-decoration-mode 1)
+  #+end_src
+
+- Appearance. Make unparsed code visible and ugly tags decoration
+  invisible.
+  #+begin_src emacs-lisp
+    (custom-set-faces
+      '(semantic-unmatched-syntax-face ((t (:background "grey20"))))
+      '(semantic-tag-boundary-face ((t nil))))
   #+end_src
 
 ** Keybindings
