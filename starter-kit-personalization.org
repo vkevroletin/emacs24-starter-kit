@@ -128,6 +128,12 @@ We are going to avoid movement of right hand to right part of keyboard.
     (define-key c-mode-base-map (kbd "C-M-h") #'backward-kill-word)
   #+end_src
 
+- just-one-space is useful but deleting all spaces is better
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "M-SPC") #'delete-horizontal-space)
+    (global-set-key (kbd "M-\\") #'just-one-space)
+  #+end_src
+
 * Fight tabs and white spaces
 
 - Good bye trailing white spaces
