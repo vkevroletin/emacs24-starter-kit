@@ -43,13 +43,16 @@
 
 - Tune popup window for atom-dark theme
   #+begin_src emacs-lisp
-    (custom-set-faces
-      '(company-scrollbar-bg ((t (:inherit company-tooltip :background "#96CBFE"))))
-      '(company-scrollbar-fg ((t (:background "dim gray"))))
-      '(company-tooltip ((t (:background "#c5c8c6" :foreground "#1d1f21"))))
-      '(company-tooltip-common ((t (:inherit company-tooltip :foreground "red4"))))
-      '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "white"))))
-      '(company-tooltip-selection ((t (:inherit company-tooltip :background "white")))))
+   (custom-set-faces
+     '(company-preview ((t (:foreground "#96CBFE"))))
+     '(company-preview-common ((t (:inherit company-preview :underline "#96CBFE"))))
+     '(company-preview-search ((t (:inherit company-preview))))
+     '(company-scrollbar-bg ((t (:inherit company-tooltip :background "dim gray"))))
+     '(company-scrollbar-fg ((t (:background "black"))))
+     '(company-tooltip ((t (:background "#c5c8c6" :foreground "#1d1f21"))))
+     '(company-tooltip-common ((t (:inherit company-tooltip :foreground "red4"))))
+     '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "#96CBFE"))))
+     '(company-tooltip-selection ((t (:inherit company-tooltip :background "#96CBFE")))))
   #+end_src
 
 * References
