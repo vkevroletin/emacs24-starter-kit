@@ -13,7 +13,7 @@ which I don't want to use at home.
    :CUSTOM_ID: starter-kit-enabled-parts
    :END:
 
-- Disable menu bar
+- Disable menu bar and toolbar
   #+begin_src emacs-lisp
     (starter-kit-load "misc-recommended")
   #+end_src
@@ -36,6 +36,12 @@ which I don't want to use at home.
 - Helm. Interactive fuzzy matching for every day emacs commands.
   #+begin_src emacs-lisp
     (starter-kit-load "helm")
+  #+end_src
+
+- Fast interactive words completion using company mode. Useful in
+  programming modes to complete identifiers' names..
+  #+begin_src emacs-lisp
+    (starter-kit-load "completion")
   #+end_src
 
 - Cpp mode

@@ -1,0 +1,58 @@
+* Company
+
+- Install
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'company)
+    (starter-kit-install-if-needed 'helm-company)
+    (require 'company)
+    (add-hook 'after-init-hook 'global-company-mode)
+  #+end_src
+
+- Define completion keybinding [2]
+  C-<return> for helm-style completion (in new window)
+  M-<return> for company-style completion (in pupup). M-<return> is
+  convenient because use can hold M and use M-p M-n to select candidates.
+  #+begin_src emacs-lisp
+    (eval-after-load 'company
+      '(progn
+         (define-key company-mode-map   (kbd "C-<return>") 'helm-company)
+         (define-key company-active-map (kbd "C-<return>") 'helm-company)
+         (define-key company-mode-map   (kbd "M-<return>") 'company-complete)
+         (define-key company-active-map (kbd "M-<return>") 'company-complete)))
+  #+end_src
+
+- Enable company globally
+  #+begin_src emacs-lisp
+    (global-company-mode)
+  #+end_src
+
+- Fast popup but from 3rd character [1]
+  #+begin_src emacs-lisp
+    (setq company-idle-delay 0.5)
+    (setq company-minimum-prefix-length 2)
+  #+end_src
+
+- Invert the navigation direction if the the completion
+  popup-isearch-match is displayed on top (happens near the bottom of
+  windows) [1]
+  #+begin_src emacs-lisp
+    (setq company-tooltip-flip-when-above t)
+  #+end_src
+
+** Appearance
+
+- Tune popup window for atom-dark theme
+  #+begin_src emacs-lisp
+    (custom-set-faces
+      '(company-scrollbar-bg ((t (:inherit company-tooltip :background "#96CBFE"))))
+      '(company-scrollbar-fg ((t (:background "dim gray"))))
+      '(company-tooltip ((t (:background "#c5c8c6" :foreground "#1d1f21"))))
+      '(company-tooltip-common ((t (:inherit company-tooltip :foreground "red4"))))
+      '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "white"))))
+      '(company-tooltip-selection ((t (:inherit company-tooltip :background "white")))))
+  #+end_src
+
+* References
+
+[1] [[https://github.com/bbatsov/prelude/blob/master/modules/prelude-company.el][Prelude company config]]
+[2] https://github.com/yasuyk/helm-company
