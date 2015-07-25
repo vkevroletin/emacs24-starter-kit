@@ -61,12 +61,11 @@ which I don't want to use at home.
   Theme should be loaded after custom (because custom stores hash sum to
   enable selected theme).
 
-  An Emacs port of the Atom Dark theme from Atom.io. Currently there
-  is no automated theme installation in Starter Kit so you need to
-  enable it by hands:
-  + M-x customize-themes
+  An Emacs port of the Atom Dark theme from Atom.io.
+  You can find other themes using M-x customize-themes.
   #+begin_src emacs-lisp
     (starter-kit-install-if-needed 'atom-dark-theme)
+    (load-theme 'atom-dark t)
   #+end_src
 
 - Disable scroll bar
