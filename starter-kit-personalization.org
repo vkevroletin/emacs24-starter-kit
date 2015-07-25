@@ -160,9 +160,16 @@ Relative linum helps to quickly jump to required line.
       (linum-mode))
   #+end_src
 
-- Enable for programming languages
+- Enable linum for programming languages. Here [3] is description how this
+  code works.
   #+begin_src emacs-lisp
-    (add-hook 'starter-kit-coding-hook #'starter-kit-enable-linum)
+    (mapc
+     (lambda (mode-hook)
+       (add-hook mode-hook 'starter-kit-enable-linum))
+     '(text-mode-hook
+       prog-mode-hook
+       comint-mode-hook
+       conf-mode-hook))
   #+end_src
 
 - Improve appearance
@@ -218,3 +225,4 @@ Relative linum helps to quickly jump to required line.
 
 [1] http://www.emacswiki.org/emacs/KillISearchMatch
 [2] http://stackoverflow.com/questions/13397737/ansi-coloring-in-compilation-mode
+[3] https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-advanced.org
