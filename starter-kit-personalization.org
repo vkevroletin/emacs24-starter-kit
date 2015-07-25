@@ -79,6 +79,19 @@ which I don't want to use at home.
     (column-number-mode t)
   #+end_src
 
+** Fix colors
+  Some extensions doesn't play well with dark themes.
+
+  + Fix diff
+  #+begin_src emacs-lisp
+    (custom-set-faces
+     '(diff-added ((t (:inherit diff-changed :background "#336633" :foreground "#cceecc"))))
+     '(diff-context ((t (:foreground "grey70"))))
+     '(diff-file-header ((t (:weight bold))))
+     '(diff-header ((t (:background "grey30"))))
+     '(diff-removed ((t (:inherit diff-changed :background "#663333" :foreground "#eecccc")))))
+  #+end_src
+
 * Improve compile command
 
 - Problems of default compile command
