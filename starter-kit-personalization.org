@@ -73,6 +73,12 @@ which I don't want to use at home.
     (scroll-bar-mode -1)
   #+end_src
 
+- Show cursor position in modeline
+  #+begin_src emacs-lisp
+    (line-number-mode t)
+    (column-number-mode t)
+  #+end_src
+
 * Improve compile command
 
 - Problems of default compile command
@@ -113,6 +119,8 @@ which I don't want to use at home.
 
 ** Key bindings
 
+TODO: consider creating minor mode like in [[https://github.com/bbatsov/prelude/blob/master/core/prelude-mode.el][Prelude]].
+
 We are going to avoid movement of right hand to right part of keyboard.
 
 - Buffers cycling is useful combination
@@ -137,6 +145,33 @@ We are going to avoid movement of right hand to right part of keyboard.
   #+begin_src emacs-lisp
     (global-set-key (kbd "M-SPC") #'delete-horizontal-space)
     (global-set-key (kbd "M-\\") #'just-one-space)
+  #+end_src
+
+- M-o to open new line /(like o and O in Vim)/ [4]
+  #+begin_src emacs-lisp
+    (defun prelude-smart-open-line-above ()
+      "Insert an empty line above the current line.
+        Position the cursor at it's beginning, according to the current mode."
+      (interactive)
+      (move-beginning-of-line nil)
+      (newline-and-indent)
+      (forward-line -1)
+      (indent-according-to-mode))
+
+    (defun prelude-smart-open-line (arg)
+      "Insert an empty line after the current line.
+    Position the cursor at its beginning, according to the current mode.
+
+    With a prefix ARG open line above the current line."
+      (interactive "P")
+      (if arg
+          (prelude-smart-open-line-above)
+        (progn
+          (move-end-of-line nil)
+          (newline-and-indent))))
+
+    (global-set-key (kbd "M-o") 'prelude-smart-open-line)
+    (global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
   #+end_src
 
 * Fight tabs and white spaces
@@ -226,3 +261,4 @@ Relative linum helps to quickly jump to required line.
 [1] http://www.emacswiki.org/emacs/KillISearchMatch
 [2] http://stackoverflow.com/questions/13397737/ansi-coloring-in-compilation-mode
 [3] https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-advanced.org
+[4] https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
