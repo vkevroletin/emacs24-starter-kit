@@ -232,7 +232,7 @@ Relative linum helps to quickly jump to required line.
   #+end_src
 
 - Improve appearance
-  #+begin_src
+  #+begin_src emacs-lisp
     (custom-set-variables
       '(linum-relative-current-symbol ">"))
 
