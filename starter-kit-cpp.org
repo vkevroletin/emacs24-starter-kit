@@ -78,6 +78,14 @@ programming project:
     (define-key c++-mode-map (kbd "C-c C-c") 'recompile)
   #+end_src
 
+** Keybindings
+
+- C-j for newline and indent
+  #+begin_src emacs-lisp
+    (define-key c-mode-map (kbd "C-j") #'newline-and-indent)
+    (define-key c++-mode-map (kbd "C-j") #'newline-and-indent)
+  #+end_src
+
 * Gtags
 
 ** Configure
