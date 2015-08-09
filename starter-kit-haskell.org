@@ -25,7 +25,7 @@ You can skip these steps if you've already setup ghc and cabal
   sudo apt-get install ghc cabal-install
   cabal update
 #+end_src
-    
+
 **** OS X [with Homebrew]
 #+begin_src sh
   brew update
@@ -79,7 +79,7 @@ pretty lambdas in Haskell code
 
 
 ** Haskell Mode
-*** Install Haskell mode 
+*** Install Haskell mode
 #+begin_src emacs-lisp
   (starter-kit-install-if-needed 'haskell-mode)
 #+end_src
@@ -96,7 +96,7 @@ pretty lambdas in Haskell code
 
 
 ** Stylish Haskell
-A simple Haskell code prettifier. 
+A simple Haskell code prettifier.
 
 This tool tries to help where necessary without getting in the way.
 
@@ -137,12 +137,13 @@ on editors including Emacs, Vim, and Sublime.
 
 
 ** Structured Haskell
+
 This minor mode provides structured editing operations based on the
 syntax of Haskell. In short-hand it's called SHM and throughout the
 codebase, too. It acts a bit like, and is heavily inspired by,
 paredit-mode for Emacs.
 
-*** Install structured Haskell 
+*** Install structured Haskell
 #+begin_src sh
   cabal install structured-haskell
 #+end_src
@@ -160,7 +161,8 @@ Hook configures faces after major mode loading. Otherwise I get
     (set-face-background 'shm-current-face "#16181a")
     (set-face-background 'shm-quarantine-face "#231f21"))
 
-  (add-hook 'haskell-mode-hook 'enable-configure-shm)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+;;  (add-hook 'haskell-mode-hook 'enable-configure-shm)
 #+end_src
 
 
@@ -177,4 +179,3 @@ Hook configures faces after major mode loading. Otherwise I get
   (starter-kit-install-if-needed 'flyspell)
   (add-hook 'haskell-mode-hook 'flyspell-prog-mode)
 #+end_src
-    
