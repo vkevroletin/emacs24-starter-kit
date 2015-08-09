@@ -186,6 +186,11 @@ We are going to avoid movement of right hand to right part of keyboard.
     (global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
   #+end_src
 
+- M-m to jump between groups separated by whitespaces
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "M-m") #'forward-whitespace)
+  #+end_src
+
 * Fight tabs and white spaces
 
 - Good bye trailing white spaces
