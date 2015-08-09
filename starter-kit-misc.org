@@ -29,16 +29,16 @@ evaluated a theme is activated using the =load-theme= function.
 
 ** Window systems
 #+srcname: starter-kit-window-view-stuff
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (when window-system
     (setq frame-title-format '(buffer-file-name "%f" ("%b")))
     (blink-cursor-mode -1)
     (when (require 'mwheel nil 'no-error) (mouse-wheel-mode t)))
-  
+
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (prefer-coding-system 'utf-8)
-  
+
   (setq visible-bell t
         echo-keystrokes 0.1
         font-lock-maximum-decoration t
@@ -64,13 +64,13 @@ evaluated a theme is activated using the =load-theme= function.
 #+end_src
 
 ** Save a list of recent files visited.
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (recentf-mode 1)
 #+end_src emacs-lisp
 
 ** Highlight matching parentheses when the point is on them.
 #+srcname: starter-kit-match-parens
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (show-paren-mode 1)
 #+end_src
 
@@ -79,7 +79,7 @@ ido-mode is interactive file and buffers selection interface with
 fuzzy matching. We use more powerful alternative called [[file:starter-kit-helm.org][helm]]. Here
 just configure ido for packages which use ido as selection mechanism.
 #+srcname: starter-kit-loves-ido-mode
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (when (> emacs-major-version 21)
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
@@ -88,7 +88,7 @@ just configure ido for packages which use ido as selection mechanism.
 #+end_src
 
 ** Other, spell checking, tabs, imenu and a coding hook
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
   (set-default 'imenu-auto-rescan t)
@@ -160,13 +160,3 @@ let them live in the =backups/= directory inside of the starter kit.
 #+begin_src emacs-lisp
 (setq diff-switches "-u")
 #+end_src
-
-** Cosmetics
-
-#+begin_src emacs-lisp
-(eval-after-load 'diff-mode
-  '(progn
-     (set-face-foreground 'diff-added "green4")
-     (set-face-foreground 'diff-removed "red3")))
-#+end_src
-
