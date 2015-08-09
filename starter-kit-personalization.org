@@ -117,19 +117,18 @@ which I don't want to use at home.
 
   + Run is similar to compile but with it's own cache
   #+begin_src emacs-lisp
-    (defun run(&optional arg)
-        (interactive "P")
-        (compile-per-project/run))
+    (fset #'run  #'compile-per-project/run)
+    (fset #'test #'compile-per-project/test)
   #+end_src
 
 - Key bindings for compile commands
   #+begin_src emacs-lisp
     (global-set-key (kbd "<f5>") #'recompile)
     (global-set-key (kbd "<f6>") #'run)
+    (global-set-key (kbd "<f7>") #'test)
   #+end_src
 
 * Improve editing productivity
-
 ** Key bindings
 
 TODO: consider creating minor mode like in [[https://github.com/bbatsov/prelude/blob/master/core/prelude-mode.el][Prelude]].

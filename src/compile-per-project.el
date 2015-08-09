@@ -131,6 +131,9 @@ Returns nil of there is no project."
 (defvar compile-per-project/run-impl
   (compile-per-project/wrap-command "Run" compile-per-project/recompile-impl-body))
 
+(defvar compile-per-project/test-impl
+  (compile-per-project/wrap-command "Test" compile-per-project/recompile-impl-body))
+
 (defun compile-per-project/recompile (&optional arg)
   (interactive "P")
   (funcall compile-per-project/recompile-impl (consp arg)))
@@ -142,6 +145,10 @@ Returns nil of there is no project."
 (defun compile-per-project/run (&optional arg)
   (interactive "P")
   (funcall compile-per-project/run-impl (consp arg)))
+
+(defun compile-per-project/test (&optional arg)
+  (interactive "P")
+  (funcall compile-per-project/test-impl (consp arg)))
 
 ;; Initialize
 
