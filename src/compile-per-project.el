@@ -78,6 +78,9 @@ Returns nil of there is no project."
          (advice-cmd (or (and last-compile-obj (get-command last-compile-obj))
                          (eval compile-command))) ; eval is from recompile definition
          (dir (read-directory-name (concat cmd-name " in: ") advice-dir))
+         ;; compilation-read-command uses default-directory to return
+         ;; commands defined in directory (executables, scripts)
+         (default-directory dir)
          (cmd (compilation-read-command advice-cmd))
          (new-compile-obj (compile-per-project/compilation-command
                            "compilation-command"
