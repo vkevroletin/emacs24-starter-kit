@@ -1,4 +1,4 @@
-  
+
 * [[https://emacs-helm.github.io/helm/][Helm]]
 
 + Install and enable core package
@@ -36,7 +36,7 @@ theme.
   - make TAB works in terminal
   - list actions using C-z
   #+begin_src emacs-lisp
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) 
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
     (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
     (define-key helm-map (kbd "C-z")  'helm-select-action)
   #+end_src
@@ -92,13 +92,13 @@ theme.
 
 + Enable fuzzy matching globally in all functions helmized by
   helm-mode
-  
+
   You can selectively enable fuzzy matching. See [2] for details.
   #+begin_src emacs-lisp
     (setq helm-mode-fuzzy-match                 t
           helm-completion-in-region-fuzzy-match t)
   #+end_src
-  
+
 + Open helm buffer inside current window, not occupy whole other window
   #+begin_src emacs-lisp
     (setq helm-split-window-in-side-p t)
@@ -127,7 +127,14 @@ theme.
             helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
   #+end_src
 
-* Projectile [3]
+* Projectile [3] :manual_installation:
+
+On Windows machine uncomment this line to improve projectile
+performance. Make shure your PATH environment variable contains
+find and grep utilities (not cygwin versions).
+#+begin_src emacs-lisp
+;; (setq projectile-indexing-method 'alien)
+#+end_src
 
 Easy project management and navigation. C-h p C-h for key bindings
 help.
@@ -141,6 +148,36 @@ help.
     (setq projectile-completion-system 'helm)
     (projectile-global-mode)
     (helm-projectile-on)
+  #+end_src
+
+- Change default action executed after switch to project. This trick
+  allows to open files and buffers from other project. Try C-p RET p
+  C-o.
+
+  #+begin_src emacs-lisp
+    (setq projectile-switch-project-action 'helm-projectile)
+  #+end_src
+
+- Exclude service directories and binary files from grep results and
+  from project files list [3]
+
+  #+begin_src emacs-lisp
+  (defun sk-exclude-file-from-grep(file-name)
+    (add-to-list 'grep-find-ignored-files file-name)
+    (add-to-list 'projectile-globally-ignored-files file-name))
+
+  (defun sk-exclude-dir-from-grep(dir-name)
+    (add-to-list 'grep-find-ignored-directories dir-name)
+    (add-to-list 'projectile-globally-ignored-directories dir-name))
+
+  (sk-exclude-dir-from-grep ".svn")
+  (sk-exclude-dir-from-grep ".git")
+
+  (sk-exclude-file-from-grep "GTAGS")
+  (sk-exclude-file-from-grep "GRTAGS")
+
+  (sk-exclude-file-from-grep "*.chm")
+  (sk-exclude-file-from-grep "*.exe")
   #+end_src
 
 - Set shorter modline
@@ -173,18 +210,18 @@ frame.
    (starter-kit-install-if-needed 'projectile-speedbar)
    (require 'projectile-speedbar)
   #+end_src
- 
+
 * Additional plugins
 
 ** Helm describe bindings
-  
+
 C-c h C-h to describe current helm key bindings.
 #+begin_src emacs-lisp
   (starter-kit-install-if-needed 'helm-descbinds)
   (require 'helm-descbinds)
   (helm-descbinds-mode)
 #+end_src
-   
+
 * Sources
 
 [1] http://tuhdo.github.io/helm-intro.html
@@ -196,4 +233,3 @@ C-c h C-h to describe current helm key bindings.
 This configuration uses optional programs:
 + ack-grep
 + surfraw
-
