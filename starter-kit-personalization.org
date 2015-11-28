@@ -1,12 +1,16 @@
 #+TITLE: Personalization
 #+OPTIONS: toc:2 num:nil ^:nil
 
-* Why
+* Personalization
 
-I share my Emacs configuration between work and home machines. Using
-machine or user specific configuration is not convenient because
-on working machine I use corporative user account with strange name
-which I don't want to use at home.
+Emacs Starter Kit is universal configuration which contains lots of
+optional parts. This file enables some parts of ESK and extends it
+with other features.
+
+Some part of ESK requires optional external dependencies of operating
+system dependent configuration. This parts are marked
+with :manual_installation: tag. Search for this :manual_installation:
+tag and you will which utilities are required and how to install them.
 
 * Enable Starter Kit parts
    :PROPERTIES:
@@ -44,6 +48,8 @@ which I don't want to use at home.
     (starter-kit-load "completion")
   #+end_src
 
+** Programming languages
+
 - Cpp mode
   #+begin_src emacs-lisp
     (starter-kit-load "cpp")
@@ -54,12 +60,14 @@ which I don't want to use at home.
     (starter-kit-load "lisp")
   #+end_src
 
-* Improve appearance                                    :manual_installation:
+- Lua
+  #+begin_src emacs-lisp
+    (starter-kit-load "lua")
+  #+end_src
+
+* Improve appearance
 
 - Enable theme
-
-  Theme should be loaded after custom (because custom stores hash sum to
-  enable selected theme).
 
   An Emacs port of the Atom Dark theme from Atom.io.
   You can find other themes using M-x customize-themes.

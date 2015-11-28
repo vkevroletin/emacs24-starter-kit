@@ -1,0 +1,46 @@
+
+* Install major mode
+
+#+begin_src emacs-lisp
+(starter-kit-install-if-needed 'lua-mode)
+#+end_src
+
+* Helper functions
+
+#+begin_src emacs-lisp
+  (defun sk-insert-dot ()
+    (interactive)
+    (insert "."))
+#+end_src
+
+After first press inserts semicolon. After second consecutive press
+changes inserted semicolon into dot. Next presses insert dots.
+#+begin_src emacs-lisp
+  (defun sk-insert-colon()
+    (interactive)
+    (if (not (eq last-command this-command))
+        (insert ":")
+      (if (equal ":" (buffer-substring (- (point) 1 ) (point)))
+          (backward-delete-char 1))
+      (insert ".")))
+#+end_src
+
+* Keybindings
+
+In lua method invocations are very confusing for programmer who uses
+Java-like programming language. Java programmers type "." (dot) to
+invoke method without any thinking. This cause errors because "." dot
+operator calls method but does not pass self as first argument. To
+avoid this type of errors I use custom insert-dot function which
+firstly inserts ":" (colon) and then turns it into "." (dot) after
+second press.
+
++ Insert semicolon(:) instead of colon(.). Second press to colon will
+  turn previously inserted ":" into ".".
++ C-. to immediately insert dot.
+#+begin_src emacs-lisp
+  (defun sk-lua-hook ()
+    (define-key lua-mode-map (kbd ".") #'sk-insert-colon)
+    (define-key lua-mode-map (kbd "C-.") #'sk-insert-dot))
+  (add-hook 'lua-mode-hook #'sk-lua-hook)
+#+end_src
