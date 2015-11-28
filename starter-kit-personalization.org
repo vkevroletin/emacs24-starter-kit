@@ -17,11 +17,6 @@ tag and you will which utilities are required and how to install them.
    :CUSTOM_ID: starter-kit-enabled-parts
    :END:
 
-- Disable menu bar and toolbar
-  #+begin_src emacs-lisp
-    (starter-kit-load "misc-recommended")
-  #+end_src
-
 - Org mode configured to own GTD-like workflow
   #+begin_src emacs-lisp
     (starter-kit-load "org")
@@ -30,11 +25,6 @@ tag and you will which utilities are required and how to install them.
 - Yasnippet: type word and press TAB to expand
   #+begin_src emacs-lisp
     (starter-kit-load "yasnippet")
-  #+end_src
-
-- Haskell. This requires installation of external software.
-  #+begin_src emacs-lisp
-    (starter-kit-load "haskell")
   #+end_src
 
 - Helm. Interactive fuzzy matching for every day emacs commands.
@@ -49,6 +39,11 @@ tag and you will which utilities are required and how to install them.
   #+end_src
 
 ** Programming languages
+
+- Haskell. This requires installation of external software.
+  #+begin_src emacs-lisp
+    (starter-kit-load "haskell")
+  #+end_src
 
 - Cpp mode
   #+begin_src emacs-lisp
@@ -76,8 +71,9 @@ tag and you will which utilities are required and how to install them.
     (load-theme 'atom-dark t)
   #+end_src
 
-- Disable scroll bar
+- Disable menu bar and toolbar
   #+begin_src emacs-lisp
+    (starter-kit-load "misc-recommended")
     (scroll-bar-mode -1)
   #+end_src
 
