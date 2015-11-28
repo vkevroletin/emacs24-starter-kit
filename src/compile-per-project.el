@@ -2,6 +2,7 @@
 
 (require 'compile)
 (require 'projectile)
+(require 'dash)
 
 ;;; Customization
 (defgroup compile-per-project nil
@@ -120,12 +121,22 @@ Returns nil of there is no project."
                                                   project-id
                                                   executed-command))))
 
+(defun compile-per-project/save-projectile-buffers ()
+  "Similar to projectile-save-project-buffers but does not
+save files which were deleted outside of emacs"
+  (--each (projectile-project-buffers)
+    (with-current-buffer it
+      (when (and buffer-file-name
+                 (file-exists-p buffer-file-name)
+                 (file-writable-p buffer-file-name))
+        (save-buffer)))))
+
 (defvar compile-per-project/recompile-impl-body
   (lambda (compile-obj)
     (let ((default-directory (get-directory compile-obj))
           (command (get-command compile-obj)))
       (when (projectile-project-p)
-        (projectile-save-project-buffers))
+        (compile-per-project/save-projectile-buffers))
       (compilation-start command))))
 
 (defvar compile-per-project/recompile-impl
