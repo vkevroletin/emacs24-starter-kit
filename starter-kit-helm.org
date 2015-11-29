@@ -180,6 +180,15 @@ help.
   (sk-exclude-file-from-grep "*.exe")
   #+end_src
 
+- Consider .svn folders as project root
+
+  The topmost .svn folder has precedence. Topmost behavior is for
+  compatibility with old svn implementations which put .svn in each
+  folder.
+  #+begin_src emacs-lisp
+    (add-to-list 'projectile-project-root-files ".svn")
+  #+end_src
+
 - Set shorter modline
   #+begin_src emacs-lisp
     (custom-set-variables
