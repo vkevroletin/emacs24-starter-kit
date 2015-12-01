@@ -175,6 +175,7 @@ help.
 
   (sk-exclude-file-from-grep "GTAGS")
   (sk-exclude-file-from-grep "GRTAGS")
+  (sk-exclude-file-from-grep "GRAPH")
 
   (sk-exclude-file-from-grep "*.chm")
   (sk-exclude-file-from-grep "*.exe")
