@@ -2,6 +2,7 @@
 (require 'dash)
 (require 'ede)
 
+
 (defun auto-cpp--substr-cnt (regex string)
   (let ((start 0)
         (res   0))
@@ -44,7 +45,7 @@
   (let ((ext (file-name-extension file)))
     (--any (equal ext it) '("h" "hpp" "c" "cpp"))))
 
-(defun auto-cpp--guess-cpp-proj (dir)
+(defun auto-cpp--guess-if-cpp-proj (dir)
   (let* ((default-directory dir)
          (all-files (projectile-current-project-files))
          (all-files-cnt (length all-files))
@@ -53,7 +54,7 @@
     (or (> cpp-files-cnt 100)
         (> cpp-percents  20))))
 
-(defun auto-cpp--locate (file-name root-dir)
+(defun auto-cpp--locate-file (file-name root-dir)
   (let* ((default-directory root-dir)
          (all-files  (projectile-current-project-files))
          (good-files (--filter (string-match file-name it) all-files)))
@@ -61,36 +62,36 @@
       (expand-file-name (auto-cpp--choose-with-weight-function good-files)
                         root-dir))))
 
-(defun auto-cpp--file-for-dir (&optional dir)
+(defun auto-cpp--project-file (&optional dir)
   (let* ((default-directory dir)
          (proj (projectile-project-p)))
     (when  proj
       (let* ((proj-file-name   (expand-file-name ".cpp-project" proj))
              (proj-file-exists (file-exists-p proj-file-name)))
         (when (or proj-file-exists
-                  (auto-cpp--guess-cpp-proj dir))
-          ;; TODO: create file in auto-cpp--load
-          (when (not proj-file-exists)
-            (with-temp-buffer (write-file proj-file-name)))
+                  (auto-cpp--guess-if-cpp-proj dir))
           proj-file-name)))))
 
 (defun auto-cpp--project-root (dir)
-  (let ((projfile (auto-cpp--file-for-dir (or dir default-directory))))
+  (let ((projfile (auto-cpp--project-file (or dir default-directory))))
     (when projfile
       (file-name-directory projfile))))
 
-(defun auto-cpp--load (dir)
-  (ede-cpp-root-project "some-cool-project"
-                        :file (auto-cpp--file-for-dir dir)
-                        :locate-fcn 'auto-cpp--locate))
+(defun auto-cpp--load-project (dir)
+  (let ((proj-file-name (auto-cpp--project-file dir)))
+    (when (not (file-exists-p proj-file-name))
+      (with-temp-buffer (write-file proj-file-name)))
+    (ede-cpp-root-project "some-cool-project"
+                          :file proj-file-name
+                          :locate-fcn 'auto-cpp--locate-file)))
 
 (ede-add-project-autoload
  (ede-project-autoload "dynamic-cpp-root"
                        :name "dynamic cpp root"
                        :file 'ede/cpp-root
-                       :proj-file 'auto-cpp--file-for-dir
+                       :proj-file 'auto-cpp--project-file
                        :proj-root 'auto-cpp--project-root
-                       :load-type 'auto-cpp--load
+                       :load-type 'auto-cpp--load-project
                        :proj-root-dirmatch "*" ;; have no idea what is it
                        :class-sym 'ede-cpp-root-project
                        :new-p nil
