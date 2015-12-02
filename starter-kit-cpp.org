@@ -169,21 +169,6 @@ Same window speedbar
     (require 'semantic)
   #+end_src
 
-** Automatically configure C++ projects
-
-Semantic does not work properly without configured EDE project where
-include directories are set. Manual configuring of EDE project is
-boring. Instead of this let's automatically consider any Projectile
-project which contains a lot of .cpp, .c, .h or .hpp files as cpp
-projects. Even better let's guess where each header is located by it's
-name and help Semantic to find it. No more include directories! Such
-approach is not 100% accurate but it requires 0
-configuration. Moreover user still can create EDE project by hands and
-it will be used instead of generic auto-cpp-project.
-#+begin_src emacs-lisp
-(require 'auto-cpp-project)
-#+end_src
-
 ** Configure
 
 - Maintain tag database. This significantly improve semantic
@@ -257,8 +242,32 @@ it will be used instead of generic auto-cpp-project.
 
 * Ede
 
++ Automatically configure EDE C++ projects
+
+  Semantic does not work properly without configured EDE project where
+  include directories are set. Manual configuring of EDE project is
+  boring. Instead of this let's automatically consider any Projectile
+  project which contains a lot of .cpp, .c, .h or .hpp files as cpp
+  projects. Even better let's guess where each header is located by it's
+  name and help Semantic to find it. No more include directories! Such
+  approach is not 100% accurate but it requires 0
+  configuration. Moreover user still can create EDE project by hands and
+  it will be used instead of generic auto-cpp-project.
+  #+begin_src emacs-lisp
+    (require 'auto-cpp-project)
+    (auto-cpp-register-ede-autoload)
+  #+end_src
+
++ Enable EDE.
+  #+begin_src emacs-lisp
+    (global-ede-mode t)
+  #+end_src
+
+* Flycheck
+
+Do same trick for Flycheck as we did for EDE.
 #+begin_src emacs-lisp
-  (global-ede-mode t)
+  (add-hook 'c++-mode-hook 'auto-cpp-configure-flycheck)
 #+end_src
 
 * Insert header guards

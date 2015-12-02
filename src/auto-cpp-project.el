@@ -1,9 +1,9 @@
 (require 'projectile)
 (require 'dash)
 (require 'ede)
+(require 'flycheck)
 
-
-(defun auto-cpp--substr-cnt (regex string)
+(defun auto-cpp--match-cnt (regex string)
   (let ((start 0)
         (res   0))
     (while (string-match regex string start)
@@ -13,11 +13,11 @@
 
 (defun auto-cpp--weight-function (path)
   (let ((main-const
-         (+ (* 2 (auto-cpp--substr-cnt "/inc/" path))
-            (* 2 (auto-cpp--substr-cnt "/include/" path))
-            (auto-cpp--substr-cnt "lib" path)
-            (auto-cpp--substr-cnt "sdk" path)))
-        (path-len (auto-cpp--substr-cnt "/" path)))
+         (+ (* 2 (auto-cpp--match-cnt "/inc/" path))
+            (* 2 (auto-cpp--match-cnt "/include/" path))
+            (auto-cpp--match-cnt "lib" path)
+            (auto-cpp--match-cnt "sdk" path)))
+        (path-len (auto-cpp--match-cnt "/" path)))
     (- (* 100 main-const)
        path-len)))
 
@@ -85,16 +85,35 @@
                           :file proj-file-name
                           :locate-fcn 'auto-cpp--locate-file)))
 
-(ede-add-project-autoload
- (ede-project-autoload "dynamic-cpp-root"
-                       :name "dynamic cpp root"
-                       :file 'ede/cpp-root
-                       :proj-file 'auto-cpp--project-file
-                       :proj-root 'auto-cpp--project-root
-                       :load-type 'auto-cpp--load-project
-                       :proj-root-dirmatch "*" ;; have no idea what is it
-                       :class-sym 'ede-cpp-root-project
-                       :new-p nil
-                       :safe-p t))
+(defun auto-cpp-register-ede-autoload ()
+  (ede-add-project-autoload
+   (ede-project-autoload "dynamic-cpp-root"
+                         :name "dynamic cpp root"
+                         :file 'ede/cpp-root
+                         :proj-file 'auto-cpp--project-file
+                         :proj-root 'auto-cpp--project-root
+                         :load-type 'auto-cpp--load-project
+                         :proj-root-dirmatch "*" ;; have no idea what is it
+                         :class-sym 'ede-cpp-root-project
+                         :new-p nil
+                         :safe-p t)))
+
+(defun auto-cpp--guess-if-include-dir (dir)
+  (--any (string-match it dir) '("/inc/" "/include/")))
+
+(defun auto-cpp--guess-project-includes ()
+  (when (projectile-project-p)
+    (let ((root (projectile-project-root))
+          (dirs (projectile-current-project-dirs))
+          (case-fold-search t))
+      (--map (expand-file-name it root)
+             (-filter 'auto-cpp--guess-if-include-dir dirs)))))
+
+(defun auto-cpp-configure-flycheck ()
+  (-when-let (dirs (auto-cpp--guess-project-includes))
+    (make-variable-buffer-local 'flycheck-clang-include-path)
+    (make-variable-buffer-local 'flycheck-gcc-include-path)
+    (nconc flycheck-clang-include-path dirs)
+    (nconc flycheck-gcc-include-path dirs)))
 
 (provide 'auto-cpp-project)
