@@ -12,14 +12,16 @@
     res))
 
 (defun auto-cpp--weight-function (path)
-  (let ((main-const
-         (+ (* 2 (auto-cpp--match-cnt "/inc/" path))
-            (* 2 (auto-cpp--match-cnt "/include/" path))
-            (auto-cpp--match-cnt "lib" path)
-            (auto-cpp--match-cnt "sdk" path)))
-        (path-len (auto-cpp--match-cnt "/" path)))
-    (- (* 100 main-const)
-       path-len)))
+  (let ((dir (concat "/" (file-name-directory path))))
+    (if (null dir) 0
+      (let ((main-const
+             (+ (* 2 (auto-cpp--match-cnt "/inc/" dir))
+                (* 2 (auto-cpp--match-cnt "/include/" dir))
+                (auto-cpp--match-cnt "/lib/" dir)
+                (auto-cpp--match-cnt "/sdk/" dir)))
+            (path-len (auto-cpp--match-cnt "/" path)))
+        (- (* 100 main-const)
+           path-len)))))
 
 (defun auto-cpp--max-index (fun xs)
   (unless (null xs)
@@ -37,8 +39,7 @@
       best-idx)))
 
 (defun auto-cpp--choose-with-weight-function (xs)
-  (let* ((dirs (-map 'file-name-directory xs))
-         (res-idx (auto-cpp--max-index 'auto-cpp--weight-function dirs)))
+  (let ((res-idx (auto-cpp--max-index 'auto-cpp--weight-function xs)))
     (nth res-idx xs)))
 
 (defun auto-cpp--is-cpp-file (file)
@@ -54,10 +55,14 @@
     (or (> cpp-files-cnt 100)
         (> cpp-percents  20))))
 
+(defun auto-cpp--is-string-suffix (full-str suffix)
+  (or (equal full-str suffix)
+      (string-suffix-p (concat "/" suffix) full-str t)))
+
 (defun auto-cpp--locate-file (file-name root-dir)
   (let* ((default-directory root-dir)
          (all-files  (projectile-current-project-files))
-         (good-files (--filter (string-match file-name it) all-files)))
+         (good-files (--filter (auto-cpp--is-string-suffix it file-name) all-files)))
     (when (not (null good-files))
       (expand-file-name (auto-cpp--choose-with-weight-function good-files)
                         root-dir))))
@@ -106,14 +111,14 @@
     (let ((root (projectile-project-root))
           (dirs (projectile-current-project-dirs))
           (case-fold-search t))
-      (--map (expand-file-name it root)
-             (-filter 'auto-cpp--guess-if-include-dir dirs)))))
+      (-filter 'auto-cpp--guess-if-include-dir
+               (--map (expand-file-name it root) dirs)))))
 
 (defun auto-cpp-configure-flycheck ()
   (-when-let (dirs (auto-cpp--guess-project-includes))
     (make-variable-buffer-local 'flycheck-clang-include-path)
     (make-variable-buffer-local 'flycheck-gcc-include-path)
-    (nconc flycheck-clang-include-path dirs)
-    (nconc flycheck-gcc-include-path dirs)))
+    (setq flycheck-clang-include-path (append flycheck-clang-include-path dirs))
+    (setq flycheck-gcc-include-path   (append flycheck-gcc-include-path dirs))))
 
 (provide 'auto-cpp-project)
