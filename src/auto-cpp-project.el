@@ -106,7 +106,8 @@
                          :proj-root-dirmatch "*" ;; have no idea what is it
                          :class-sym 'ede-cpp-root-project
                          :new-p nil
-                         :safe-p t)))
+                         :safe-p t)
+   'unique))
 
 (defun auto-cpp--guess-if-include-dir (dir)
   (--any (string-match it dir) '("/inc/" "/include/")))
