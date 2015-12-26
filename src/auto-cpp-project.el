@@ -3,6 +3,10 @@
 (require 'ede)
 (require 'flycheck)
 
+(defcustom auto-cpp-system-include-path '()
+  "List of directories where Semantic should search cpp includes."
+  :type '(repeat string))
+
 (defun auto-cpp--match-cnt (regex string)
   (let ((start 0)
         (res   0))
@@ -88,7 +92,8 @@
       (with-temp-buffer (write-file proj-file-name)))
     (ede-cpp-root-project "some-cool-project"
                           :file proj-file-name
-                          :locate-fcn 'auto-cpp--locate-file)))
+                          :locate-fcn 'auto-cpp--locate-file
+                          :system-include-path auto-cpp-system-include-path)))
 
 (defun auto-cpp-register-ede-autoload ()
   (ede-add-project-autoload
