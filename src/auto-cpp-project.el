@@ -3,9 +3,33 @@
 (require 'ede)
 (require 'flycheck)
 
+(defgroup auto-cpp-project nil
+  "Automatically configure cpp project for Semantic parser."
+  :group 'tools
+  :group 'convenience)
+
 (defcustom auto-cpp-system-include-path '()
-  "List of directories where Semantic should search cpp includes."
+  "List of directories where Semantic should search cpp
+includes."
+  :group 'auto-cpp-project
   :type '(repeat string))
+
+(defcustom auto-cpp-project-markers '(".cpp-project")
+  "File names which tells that directory contains cpp project"
+  :group 'auto-cpp-project
+  :type '(repeat string))
+
+(defcustom auto-cpp-project-maybe-markers '()
+  "If folder contains one of listed files then auto-cpp-project
+will try to guess if this is cpp project"
+  :group 'auto-cpp-project
+  :type '(repeat string))
+
+(defcustom auto-cpp-project-always-guess '()
+  "Always try to guess if directory contains cpp project. Create
+\".cpp-project\" marker if no other markers are in directory."
+  :group 'auto-cpp-project
+  :type '(boolean))
 
 (defun auto-cpp--match-cnt (regex string)
   (let ((start 0)
@@ -72,14 +96,23 @@
                         root-dir))))
 
 (defun auto-cpp--project-file (&optional dir)
-  (let* ((default-directory dir)
-         (proj (projectile-project-p)))
-    (when  proj
-      (let* ((proj-file-name   (expand-file-name ".cpp-project" proj))
-             (proj-file-exists (file-exists-p proj-file-name)))
-        (when (or proj-file-exists
-                  (auto-cpp--guess-if-cpp-proj dir))
-          proj-file-name)))))
+  (let ((default-directory dir))
+    (-when-let (proj (projectile-project-p))
+      (let* ((marker-exists (lambda (x) (file-exists-p (expand-file-name x proj))))
+             (project-marker
+              (or (-find marker-exists auto-cpp-project-markers)
+                  (-when-let (marker (-find marker-exists auto-cpp-project-maybe-markers))
+                    (and (auto-cpp--guess-if-cpp-proj dir)
+                         marker))
+                  (and auto-cpp-project-always-guess
+                       (auto-cpp--guess-if-cpp-proj dir)
+                       (or (-find marker-exists auto-cpp-project-maybe-markers)
+                           ".cpp-project")))))
+        (when project-marker
+          (let ((full-path (expand-file-name project-marker proj)))
+            (unless (file-exists-p full-path)
+              (with-temp-buffer (write-file full-path)))
+            full-path))))))
 
 (defun auto-cpp--project-root (dir)
   (let ((projfile (auto-cpp--project-file (or dir default-directory))))
@@ -88,8 +121,6 @@
 
 (defun auto-cpp--load-project (dir)
   (let ((proj-file-name (auto-cpp--project-file dir)))
-    (when (not (file-exists-p proj-file-name))
-      (with-temp-buffer (write-file proj-file-name)))
     (ede-cpp-root-project "some-cool-project"
                           :file proj-file-name
                           :locate-fcn 'auto-cpp--locate-file
