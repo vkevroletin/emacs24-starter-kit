@@ -8,7 +8,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   :results:  silent
   :END:
 
-Support for developing in Scala under Emacs. 
+Support for developing in Scala under Emacs.
 
 ** Scala-mode2
   :PROPERTIES:
@@ -36,7 +36,7 @@ Install scala-mode2 from MELPA (M-x package-install RET scala-mode2)
 *** Customise scala-mode2
 #+begin_src emacs-lisp
   (add-hook 'scala-mode-hook '(lambda ()
-  
+
     ;; Bind the 'newline-and-indent' command to RET (aka 'enter'). This
     ;; is normally also available as C-j. The 'newline-and-indent'
     ;; command has the following functionality: 1) it removes trailing
@@ -44,7 +44,7 @@ Install scala-mode2 from MELPA (M-x package-install RET scala-mode2)
     ;; indents it.  An alternative is the
     ;; 'reindent-then-newline-and-indent' command.
     (local-set-key (kbd "RET") 'newline-and-indent)
-  
+
     ;; Alternatively, bind the 'newline-and-indent' command and
     ;; 'scala-indent:insert-asterisk-on-multiline-comment' to RET in
     ;; order to get indentation and asterisk-insertion within multi-line
@@ -54,7 +54,7 @@ Install scala-mode2 from MELPA (M-x package-install RET scala-mode2)
                       (interactive)
                       (newline-and-indent)
                       (scala-indent:insert-asterisk-on-multiline-comment)))
-  
+
     ;; Bind the backtab (shift tab) to
     ;; 'scala-indent:indent-with-reluctant-strategy command. This is usefull
     ;; when using the 'eager' mode by default and you want to "outdent" a
@@ -76,7 +76,7 @@ interacting with sbt from emacs. The core functionality includes:
 - interacting with sbt shell and scala console
 - compiling code and navigating to errors
 - finding things in code
-  
+
 *** Install sbt-mode
 Install sbt-mode2 from MELPA (M-x package-install RET sbt-mode)
 
@@ -107,11 +107,11 @@ key-bindings and some settings.
     ;; which type of compiler output can be skipped. 1 = skip info
     ;; 2 = skip info and warnings.
     (setq compilation-skip-threshold 1)
-  
+
     ;; Bind C-a to 'comint-bol when in sbt-mode. This will move the
     ;; cursor to just after prompt.
     (local-set-key (kbd "C-a") 'comint-bol)
-  
+
     ;; Bind M-RET to 'comint-accumulate. This will allow you to add
     ;; more than one line to scala console prompt before sending it
     ;; for interpretation. It will keep your command history cleaner.
@@ -127,7 +127,7 @@ commands are good to have in some easily accessible key position.
      ;; sbt-find-definitions is a command that tries to find (with grep)
      ;; the definition of the thing at point.
      (local-set-key (kbd "M-.") 'sbt-find-definitions)
-     
+
      ;; use emacs M-x next-error to navigate errors
      (local-set-key (kbd "M-'") 'next-error)
      ;; use sbt-run-previous-command to re-compile your code after changes
@@ -142,13 +142,15 @@ refactoring.
 *** Install Ensime
 #+begin_src emacs-lisp
   (starter-kit-install-if-needed 'ensime)
+
+  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 #+end_src
 
 ** Yasnippet
   :PROPERTIES:
   :tangle: yes
   :END:
-Provide templates for many standard operations.   
+Provide templates for many standard operations.
 
 *** Install Yasnippet
 #+begin_src emacs-lisp
@@ -177,7 +179,7 @@ uncomment the expression below
     ;; clean-up whitespace at save
     (make-local-variable 'before-save-hook)
     (add-hook 'before-save-hook 'whitespace-cleanup)
-  
+
     ;; turn on highlight. To configure what is highlighted, customize
     ;; the *whitespace-style* variable. A sane set of things to
     ;; highlight is: face, tabs, trailing

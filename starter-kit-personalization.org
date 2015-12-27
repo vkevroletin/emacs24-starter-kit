@@ -60,6 +60,11 @@ tag and you will which utilities are required and how to install them.
     (starter-kit-load "lua")
   #+end_src
 
+- Scala
+  #+begin_src emacs-lisp
+    (starter-kit-load "scala")
+  #+end_src
+
 * Improve appearance
 
 - Enable theme
@@ -281,6 +286,12 @@ Relative linum helps to quickly jump to required line.
         (when (eq major-mode 'compilation-mode)
           (ansi-color-apply-on-region compilation-filter-start (point-max))))
       (add-hook 'compilation-filter-hook 'starter-kit-colorize-compilation-buffer))
+  #+end_src
+
+* Packages required for testing
+
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'f)
   #+end_src
 
 * Enable masked commands
