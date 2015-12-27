@@ -265,10 +265,28 @@ Same window speedbar
 
 * Flycheck
 
-Do same trick for Flycheck as we did for EDE.
-#+begin_src emacs-lisp
-  (add-hook 'c++-mode-hook 'auto-cpp-configure-flycheck)
-#+end_src
++ Do same trick for Flycheck as we did for EDE.
+  #+begin_src emacs-lisp
+    (add-hook 'c++-mode-hook 'auto-cpp-configure-flycheck)
+  #+end_src
+
++ Use caching optimization
+
+  Out automatic flycheck configuration script uses external find
+  program instead of Projectile cache. This is partly because
+  Projectile stores only file names but not directories names and
+  partly because I am lazy to write efficient extracting of all
+  sub-directories names from file names using prefix tree. Hence we
+  use external program and cache all result for performance
+  reasons. We need some mechanism to update cache with fresh
+  result. Best ways is to do it automatically when Projectile cache
+  invalidate.
+  #+begin_src emacs-lisp
+    (defadvice projectile-invalidate-cache
+      (before sk-invalidate-flycheck-settings-cache (args) activate)
+        (interactive "P")
+        (auto-cpp-invalidate-flycheck-configuration-cache))
+  #+end_src
 
 * Insert header guards
 
