@@ -172,13 +172,15 @@ directories listed here."
 (defun auto-cpp-configure-flycheck (&optional force)
   (interactive "P")
 
-  (let ((dirs) (project-cache-get "flycheck-includes"))
+  (let ((dirs (project-cache-get "flycheck-includes")))
     (when (or (null dirs) (consp force))
       (message "Configuring cpp include paths for flycheck")
       (setq dirs (or (auto-cpp--guess-project-includes)
                      ("empty")))
       (project-cache-put "flycheck-includes" dirs))
     (unless (equal dirs "empty")
+      (make-variable-buffer-local 'flycheck-clang-include-path)
+      (make-variable-buffer-local 'flycheck-gcc-include-path)
       (setq flycheck-clang-include-path (-distinct (append flycheck-clang-include-path dirs)))
       (setq flycheck-gcc-include-path   (-distinct (append flycheck-gcc-include-path dirs))))))
 
