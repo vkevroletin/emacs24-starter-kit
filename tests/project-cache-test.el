@@ -3,7 +3,7 @@
 
 (package-initialize)
 (require 'f)
-(add-to-list 'load-path (f-dirname (f-this-file)))
+(add-to-list 'load-path (f-join (f-dirname (f-this-file)) "../src"))
 
 (require 'project-cache)
 
