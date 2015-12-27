@@ -140,16 +140,11 @@ will try to guess if this is cpp project"
                          :safe-p t)
    'unique))
 
-(defun auto-cpp--guess-if-include-dir (dir)
-  (--any (string-match it dir) '("/inc/" "/include/")))
-
 (defun auto-cpp--guess-project-includes ()
-  (when (projectile-project-p)
-    (let ((root (projectile-project-root))
-          (dirs (projectile-current-project-dirs))
-          (case-fold-search t))
-      (-filter 'auto-cpp--guess-if-include-dir
-               (--map (expand-file-name it root) dirs)))))
+  (-when-let (default-directory (projectile-project-p))
+    (let ((cmd "find -type d -and  \\( -wholename \"*/include*\" -or -wholename \"*/inc*\" \\)"))
+      (--map (expand-file-name it default-directory)
+             (split-string (shell-command-to-string cmd) "[\n\t\0]+" t)))))
 
 (defun auto-cpp-configure-flycheck ()
   (-when-let (dirs (auto-cpp--guess-project-includes))
