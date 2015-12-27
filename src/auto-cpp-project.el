@@ -3,6 +3,7 @@
 (require 'ede)
 (require 'flycheck)
 (require 'project-cache)
+(require 's)
 
 (defgroup auto-cpp-project nil
   "Automatically configure cpp project for Semantic parser."
@@ -32,6 +33,20 @@ will try to guess if this is cpp project"
   :group 'auto-cpp-project
   :type '(boolean))
 
+(defcustom auto-cpp-project-name-weights
+  '(("inc" . 2)
+    ("include" . 2)
+    ("lib" . 1)
+    ("sdk" . 1))
+  "Auto cpp tweaks Semantic to resolve includes choosing best
+matching file names. It defines weight function and chooses files
+with best (max) score. Weight function counts (multiplying to
+weight) how many times listed directories appear in file
+path. Auto cpp alwo configures flycheck to look includes inside
+directories listed here."
+  :group 'auto-cpp-project
+  :type '(cons string integer))
+
 (defun auto-cpp--match-cnt (regex string)
   (let ((start 0)
         (res   0))
@@ -41,13 +56,15 @@ will try to guess if this is cpp project"
     res))
 
 (defun auto-cpp--weight-function (path)
-  (let ((dir (concat "/" (file-name-directory path))))
+  (let ((dir (concat "/" (file-name-directory path)))
+        (patterns (--map (cons (concat "/" (car it) "/") (cdr it))
+                         auto-cpp-project-name-weights)))
     (if (null dir) 0
       (let ((main-const
-             (+ (* 2 (auto-cpp--match-cnt "/inc/" dir))
-                (* 2 (auto-cpp--match-cnt "/include/" dir))
-                (auto-cpp--match-cnt "/lib/" dir)
-                (auto-cpp--match-cnt "/sdk/" dir)))
+             (-sum
+              (--map
+               (* (cdr it) (auto-cpp--match-cnt (car it) dir))
+               patterns)))
             (path-len (auto-cpp--match-cnt "/" path)))
         (- (* 100 main-const)
            path-len)))))
@@ -141,9 +158,14 @@ will try to guess if this is cpp project"
                          :safe-p t)
    'unique))
 
+(defun auto-cpp--make-find-cmd ()
+  (let* ((xs (--map (concat "-wholename '*/" (car it) "'") auto-cpp-project-name-weights))
+         (cmd-part (s-join " -or " xs)))
+    (concat "find -type d -and  \\( " cmd-part " \\)")))
+
 (defun auto-cpp--guess-project-includes ()
   (-when-let (default-directory (projectile-project-p))
-    (let ((cmd "find -type d -and  \\( -wholename \"*/include*\" -or -wholename \"*/inc*\" \\)"))
+    (let ((cmd (auto-cpp--make-find-cmd)))
       (--map (expand-file-name it default-directory)
              (split-string (shell-command-to-string cmd) "[\n\t\0]+" t)))))
 

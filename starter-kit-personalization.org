@@ -288,10 +288,11 @@ Relative linum helps to quickly jump to required line.
       (add-hook 'compilation-filter-hook 'starter-kit-colorize-compilation-buffer))
   #+end_src
 
-* Packages required for testing
+* Packages required by our hand written code
 
   #+begin_src emacs-lisp
     (starter-kit-install-if-needed 'f)
+    (starter-kit-install-if-needed 's)
   #+end_src
 
 * Enable masked commands
