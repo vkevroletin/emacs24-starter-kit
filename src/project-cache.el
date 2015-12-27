@@ -4,9 +4,8 @@
 (require 'dash)
 
 (defcustom project-cache-file
-  (expand-file-name "project.cache" user-emacs-directory)
+  (expand-file-name ".project.cache" user-emacs-directory)
   "The name of cache file."
-  :group 'compile-per-project
   :type 'string)
 
 (defvar project-cache--data (make-hash-table :test 'equal))
@@ -52,6 +51,11 @@
 (defun project-cache--get-from (proj-id key)
   (-when-let (proj-cache (gethash proj-id project-cache--data))
     (gethash key proj-cache)))
+
+(condition-case nil
+    (project-cache-read-from-file)
+  (error
+   (project-cache-clear)))
 
 (add-to-list 'kill-emacs-hook #'project-cache-write-to-file)
 

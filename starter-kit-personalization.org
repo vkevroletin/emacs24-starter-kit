@@ -120,21 +120,13 @@ tag and you will which utilities are required and how to install them.
   + Persists cache between sessions.
   #+begin_src emacs-lisp
     (require 'compile-per-project)
-    (fset #'compile   'compile-per-project/compile)
-    (fset #'recompile 'compile-per-project/recompile)
-  #+end_src
-
-  + Run is similar to compile but with it's own cache
-  #+begin_src emacs-lisp
-    (fset #'run  #'compile-per-project/run)
-    (fset #'test #'compile-per-project/test)
   #+end_src
 
 - Key bindings for compile commands
   #+begin_src emacs-lisp
-    (global-set-key (kbd "<f5>") #'recompile)
-    (global-set-key (kbd "<f6>") #'run)
-    (global-set-key (kbd "<f7>") #'test)
+    (global-set-key (kbd "<f5>") #'compile-per-project-compile)
+    (global-set-key (kbd "<f6>") #'compile-per-project-run)
+    (global-set-key (kbd "<f7>") #'compile-per-project-test)
   #+end_src
 
 * Improve editing productivity
