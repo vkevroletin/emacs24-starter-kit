@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -
+;; run with emacs -batch -l ert -l project-cache-test.el -f ert-run-tests-batch-and-exit
+
 (package-initialize)
 (require 'f)
 (add-to-list 'load-path (f-dirname (f-this-file)))

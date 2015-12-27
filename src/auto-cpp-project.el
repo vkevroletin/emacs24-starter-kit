@@ -2,6 +2,7 @@
 (require 'dash)
 (require 'ede)
 (require 'flycheck)
+(require 'project-cache)
 
 (defgroup auto-cpp-project nil
   "Automatically configure cpp project for Semantic parser."
@@ -146,11 +147,16 @@ will try to guess if this is cpp project"
       (--map (expand-file-name it default-directory)
              (split-string (shell-command-to-string cmd) "[\n\t\0]+" t)))))
 
-(defun auto-cpp-configure-flycheck ()
-  (-when-let (dirs (auto-cpp--guess-project-includes))
-    (make-variable-buffer-local 'flycheck-clang-include-path)
-    (make-variable-buffer-local 'flycheck-gcc-include-path)
-    (setq flycheck-clang-include-path (append flycheck-clang-include-path dirs))
-    (setq flycheck-gcc-include-path   (append flycheck-gcc-include-path dirs))))
+(defun auto-cpp-configure-flycheck (&optional force)
+  (interactive "P")
+
+  (let ((dirs) (project-cache-get "flycheck-includes"))
+    (when (or (null dirs) (consp force))
+      (setq dirs (or (auto-cpp--guess-project-includes)
+                     ("empty")))
+      (project-cache-put "flycheck-includes" dirs))
+    (unless (equal dirs "empty")
+      (setq flycheck-clang-include-path (-distinct (append flycheck-clang-include-path dirs)))
+      (setq flycheck-gcc-include-path   (-distinct (append flycheck-gcc-include-path dirs))))))
 
 (provide 'auto-cpp-project)

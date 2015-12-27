@@ -53,4 +53,6 @@
   (-when-let (proj-cache (gethash proj-id project-cache--data))
     (gethash key proj-cache)))
 
+(add-to-list 'kill-emacs-hook #'project-cache-write-to-file)
+
 (provide 'project-cache)
