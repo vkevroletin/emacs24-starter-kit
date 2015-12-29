@@ -12,6 +12,14 @@ system dependent configuration. This parts are marked
 with :manual_installation: tag. Search for this :manual_installation:
 tag and you will which utilities are required and how to install them.
 
+* Install packages required by our hand written code
+
++ Libraries for convenient files and strings manipulation
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'f)
+    (starter-kit-install-if-needed 's)
+  #+end_src
+
 * Enable Starter Kit parts
    :PROPERTIES:
    :CUSTOM_ID: starter-kit-enabled-parts
@@ -222,7 +230,7 @@ Relative linum helps to quickly jump to required line.
 
     (defun starter-kit-enable-linum ()
       (interactive)
-      (linum-mode))
+      (linum-relative-mode))
   #+end_src
 
 - Enable linum for programming languages. Here [3] is description how this
@@ -280,11 +288,11 @@ Relative linum helps to quickly jump to required line.
       (add-hook 'compilation-filter-hook 'starter-kit-colorize-compilation-buffer))
   #+end_src
 
-* Packages required by our hand written code
+* Persistent scratch buffer
 
   #+begin_src emacs-lisp
-    (starter-kit-install-if-needed 'f)
-    (starter-kit-install-if-needed 's)
+    (starter-kit-install-if-needed 'persistent-scratch)
+    (persistent-scratch-setup-default)
   #+end_src
 
 * Enable masked commands
