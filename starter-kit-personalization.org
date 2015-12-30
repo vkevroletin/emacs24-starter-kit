@@ -230,7 +230,7 @@ Relative linum helps to quickly jump to required line.
 
     (defun starter-kit-enable-linum ()
       (interactive)
-      (linum-relative-mode))
+      (linum-on))
   #+end_src
 
 - Enable linum for programming languages. Here [3] is description how this
