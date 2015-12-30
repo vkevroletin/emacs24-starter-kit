@@ -53,9 +53,9 @@
     (gethash key proj-cache)))
 
 (condition-case nil
-    (project-cache-read-from-file)
-  (error
-   (project-cache-clear)))
+    (project-cache-read-from-file))
+(unless (hash-table-p project-cache--data)
+  (project-cache-clear))
 
 (add-to-list 'kill-emacs-hook #'project-cache-write-to-file)
 
