@@ -112,7 +112,7 @@ an Org file to put the note into.
 
 Agenda should be build from files listed below. Create missed files.
 #+begin_src emacs-lisp
-  (defun touch-file (filename) 
+  (defun touch-file (filename)
     (with-temp-buffer (write-file filename)))
 
   (defun ensure-file-exists (filename)
@@ -120,18 +120,24 @@ Agenda should be build from files listed below. Create missed files.
 
   (let ((personal-org-files (list "~/org/gtd.org"
                                   "~/org/habits.org"
-                                  "~/org/education.org" 
-                                  "~/org/work.org"
-                                  "~/org/diary.org"
-                                  "~/org/archive.org")))
+                                  "~/org/education.org"
+                                  "~/org/work.org")))
     (dolist (it personal-org-files) (ensure-file-exists it))
     (setq org-agenda-files personal-org-files))
+
+  (ensure-file-exists "~/org/archive.org")
 #+end_src
 
 Archive in file ~/org/archive.org (absolute path), under headlines
 "From FILENAME" where file name is the current file name.
 #+begin_src emacs-lisp
   (setq org-archive-location "~/org/archive.org::* From %s")
+#+end_src
+
+Configure "capture" feature for quick notes saving
+#+begin_src emacs-lisp
+  (setq org-default-notes-file "~/org/notes.org")
+  (define-key global-map (kbd "C-c c") 'org-capture)
 #+end_src
 
 Enable habit tracking in Org-mode
@@ -159,6 +165,28 @@ List of TODO entry keyword sequences and their interpretation
               ("MAYBE" :foreground "magenta" :weight bold)
               ("CANCELLED" :foreground "forest green" :weight bold))))
 
+#+end_src
+
+** Send agenda to email
+
++ Install prerequisites
+  org-agenda-write requires htmlize to export agenda to html
+  #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'htmlize)
+  #+end_src
+
++ C-c m from agenda view sends it via email
+  This function exports existing agenda buffer to html. Then it composes
+  email and sends it. Email composition is tricky since it uses
+  interactive functions to create email.
+  #+begin_src emacs-lisp
+    (defun sk-send-agenda ()
+      (interactive)
+      (require 'sk-email-agenda) ;; not-auto loads ^_^
+      (sk-send-agenda-to-email "kevroletin@gmail.com"))
+
+    (with-eval-after-load "org-agenda"
+      (define-key org-agenda-mode-map (kbd "C-c m") #'sk-send-agenda))
 #+end_src
 
 ** Flyspell customization
@@ -191,4 +219,3 @@ theme.
   (custom-set-faces
     '(outline-2 ((t (:foreground "#8AE234")))))
 #+end_src
-
