@@ -29,13 +29,7 @@
   (project-cache-test-init)
 
   (project-cache-put '() 10)
-  (should (null (project-cache-get '()))))
-
-(ert-deftest project-cache-test--put-get-nil ()
-  (project-cache-test-init)
-
-  (project-cache-put '() 10)
-  (should (null (project-cache-get '()))))
+  (should (equal (project-cache-get '()) 10)))
 
 (ert-deftest project-cache-test--file-write-read ()
   (project-cache-test-init)

@@ -11,12 +11,11 @@
 (defvar project-cache--data (make-hash-table :test 'equal))
 
 (defun project-cache-put (key value)
-  (when key
-    (-when-let (proj-id (projectile-project-p))
-      (project-cache--put-into proj-id key value))))
+  (let ((proj-id (projectile-project-p)))
+    (project-cache--put-into proj-id key value)))
 
 (defun project-cache-get (key)
-  (-when-let (proj-id (projectile-project-p))
+  (let ((proj-id (projectile-project-p)))
     (project-cache--get-from proj-id key)))
 
 ;; reuse projectile-unserialize
