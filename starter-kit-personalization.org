@@ -212,6 +212,20 @@ We are going to avoid movement of right hand to right part of keyboard.
     (global-superword-mode)
   #+end_src
 
+** Undo/Redo
+
+Undo/redo history is a tree but manipulating this tree is a
+challenge. With undo-tree you can press C-x u and view graphical
+representation of undo/redo history. In undo-tree buffer press d to
+toggle diff and t to toggle timestamps, q to quit and C-q to
+abort. See undo-tree-mode help for details or better description of
+package using describe-package.
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'undo-tree)
+  (require 'undo-tree)
+  (global-undo-tree-mode)
+#+end_src
+
 * Fight tabs and white spaces
 
 - Good bye trailing white spaces
