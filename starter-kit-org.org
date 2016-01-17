@@ -140,6 +140,14 @@ Configure "capture" feature for quick notes saving
   (define-key global-map (kbd "C-c c") 'org-capture)
 #+end_src
 
+#+begin_src emacs-lisp
+  (setq org-capture-templates
+        '(("n" "New task" entry (file+headline "~/org/gtd.org" "No category")
+           "* NEW %?\n  %i\n  %a")
+          ("t" "Note" entry (file "~/org/notes.org")
+           "* %?\n  %i\n  %a")))
+#+end_src
+
 Enable habit tracking in Org-mode
 #+begin_src emacs-lisp
   (add-to-list 'org-modules 'org-habit)
@@ -150,21 +158,33 @@ Clocking info will be wrapped into a drawer
   (setq org-clock-into-drawer t)
 #+end_src
 
-List of TODO entry keyword sequences and their interpretation
+List of TODO entry keyword sequences and their interpretation. Symbols
+in brackets define if setting status requires writing description.
 #+begin_src emacs-lisp
-
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEW(n)"  "|" "DONE(d@/!)")
               (sequence "WAITING(w@/!)" "MAYBE(h@/!)" "|" "CANCELLED(c@/!)"))))
+#+end_src
 
+Coloring have meaning. Red color disturbs me so NEW task are red -
+they should be quickly performed or turned into green. TODO tasks are
+green because green stimulates action. Other colors are random.
+#+begin_src emacs-lisp
 (setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red" :weight bold)
-              ("NEW" :foreground "blue" :weight bold)
-              ("DONE" :foreground "forest green" :weight bold)
-              ("WAITING" :foreground "orange" :weight bold)
-              ("MAYBE" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold))))
+      (quote (("TODO"      :foreground "green"  :weight bold)
+              ("NEW"       :foreground "red"    :weight bold)
+              ("DONE"      :foreground "gray"   :weight bold)
+              ("WAITING"   :foreground "orange" :weight bold)
+              ("MAYBE"     :foreground "yellow" :weight bold)
+              ("CANCELLED" :foreground "gray"   :weight bold))))
+#+end_src
 
+Task with :prj: tag is a project. Tell org-mode how to detect stall
+projects (i.e. projects without tasks).
+#+begin_src emacs-lisp
+  (setq org-tags-exclude-from-inheritance '("prj")
+        org-stuck-projects '("+prj"
+                             ("TODO" "NEW")))
 #+end_src
 
 ** Send agenda to email
