@@ -12,10 +12,54 @@
 
 Customize faces with white background since they are ugly in dark
 theme.
+
++ Use green color from Atom theme
 #+begin_src emacs-lisp
   (custom-set-faces
-    '(helm-buffer-directory ((t (:foreground "#DAD085"))))
-    '(helm-ff-directory     ((t (:foreground "goldenrod")))))
+    '(helm-grep-finish   ((t (:foreground "#8AE234"))))
+    '(helm-bookmark-info ((t (:inherit helm-grep-finish))))
+    '(helm-ff-executable ((t (:inherit helm-grep-finish))))
+    '(helm-prefarg       ((t (:inherit helm-grep-finish))))
+    '(helm-locate-finish ((t (:inherit helm-grep-finish)))))
+#+end_src
+
++ Ordinary directories are highlighted using brown. Current and parent
+  directories are hidden using dark font
+#+begin_src emacs-lisp
+  (custom-set-faces
+    '(helm-buffer-directory ((t (:inherit default :weight bold))))
+    '(helm-ff-directory ((t (:inherit default :foreground "sandy brown"))))
+    '(helm-ff-dotted-directory ((t (:inherit helm-ff-directory :foreground "dim gray"))))
+    '(helm-ff-dotted-symlink-directory ((t (:inherit helm-ff-symlink :weight bold)))))
+#+end_src
+
++ Symlinks are underlines
+#+begin_src emacs-lisp
+  (custom-set-faces
+    '(helm-ff-invalid-symlink ((t (:inherit helm-ff-symlink :underline (:color "red" :style wave)))))
+    '(helm-ff-symlink ((t (:underline t)))))
+#+end_src
+
++ Selection using brown colors
+#+begin_src emacs-lisp
+  (custom-set-faces
+    '(helm-visible-mark ((t (:background "gray50" :foreground "#1d1f21"))))
+    '(helm-selection    ((t (:background "gray90" :foreground "#1d1f21" :weight ultra-bold)))))
+#+end_src
+
++ Good bye giant header and bright question mark
+#+begin_src emacs-lisp
+  (custom-set-faces
+    '(helm-ff-prefix ((t (:foreground "#ff982d"))))
+    '(helm-source-header ((t (:foreground "#96CBFE")))))
+#+end_src
+
++ Use default colors for ordinary files
+#+begin_src emacs-lisp
+  (custom-set-faces
+    '(helm-buffer-file      ((t nil)))
+    '(helm-candidate-number ((t nil)))
+    '(helm-ff-file          ((t nil))))
 #+end_src
 
 ** Key bindings
